@@ -25,6 +25,9 @@ namespace UpdaterManagerLibrary
                     {
                         if (currentVersion < latestVersion)
                         {
+                            Application.EnableVisualStyles();
+                            Application.SetCompatibleTextRenderingDefault(false);
+
                             using (UpdateForm updateForm = new UpdateForm(versioning.VersionHistory))
                             {
                                 if (updateForm.ShowDialog() == DialogResult.OK)

@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater Manager", "Updater 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{084F96BE-2F22-4D42-9B91-93E779D170B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Custom Control Collection", "Custom Control Collection\Custom Control Collection\Custom Control Collection.csproj", "{A0ECE02E-31D0-4E8B-A355-BFE61DF97CAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{084F96BE-2F22-4D42-9B91-93E779D170B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{084F96BE-2F22-4D42-9B91-93E779D170B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{084F96BE-2F22-4D42-9B91-93E779D170B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0ECE02E-31D0-4E8B-A355-BFE61DF97CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0ECE02E-31D0-4E8B-A355-BFE61DF97CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0ECE02E-31D0-4E8B-A355-BFE61DF97CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0ECE02E-31D0-4E8B-A355-BFE61DF97CAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

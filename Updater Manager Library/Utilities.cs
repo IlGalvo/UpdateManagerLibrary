@@ -8,6 +8,8 @@ namespace UpdaterManagerLibrary
         public static string ProcessArguments { get { return ("/passive"); } }
 
         public static string CurrentFileNameTemp { get { return AppDomain.CurrentDomain.FriendlyName.Replace(".exe", ".tmp"); } }
+
+        public static string UpdaterArguments { get { return ("/update \"{0}\" \"{1}\""); } }
         #endregion
 
         #region TIMEOUT

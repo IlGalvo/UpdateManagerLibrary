@@ -78,5 +78,11 @@
   <ItemGroup>
     <None Include="Resources\Updater Manager.exe" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Custom Control Collection\Custom Control Collection\Custom Control Collection.csproj">
+      <Project>{a0ece02e-31d0-4e8b-a355-bfe61df97cae}</Project>
+      <Name>Custom Control Collection</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
