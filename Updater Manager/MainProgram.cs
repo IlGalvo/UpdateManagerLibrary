@@ -78,7 +78,6 @@ namespace UpdaterManager
                             catch (Exception exception)
                             {
                                 MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                MessageBox.Show(exception.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                             finally
                             {

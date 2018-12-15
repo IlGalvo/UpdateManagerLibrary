@@ -8,13 +8,13 @@ namespace UpdaterManagerLibrary
 {
     public static class UpdaterManager
     {
-        public static bool CheckForUpdates(Version currentVersion, Uri url, bool notifyIfNot)
+        public static bool CheckForUpdates(Version currentVersion, Uri url, bool notify)
         {
-            bool success = false;
+            bool procedureSuccess = false;
 
             try
             {
-                int timeout = ((!notifyIfNot) ? UpdateUtilities.DefaultTimeout : UpdateUtilities.LongTimeout);
+                int timeout = ((!notify) ? UpdateUtilities.DefaultTimeout : UpdateUtilities.LongTimeout);
 
                 using (WebClientTimeout webClientTimeout = new WebClientTimeout(timeout))
                 using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(url)))
@@ -33,14 +33,14 @@ namespace UpdaterManagerLibrary
                                     {
                                         if (downloadForm.ShowDialog() == DialogResult.OK)
                                         {
-                                            success = true;
+                                            procedureSuccess = true;
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    else if (notifyIfNot)
+                    else if (notify)
                     {
                         string text = "Nessun aggiornamento trovato.";
 
@@ -50,22 +50,13 @@ namespace UpdaterManagerLibrary
             }
             catch (Exception exception)
             {
-                if ((notifyIfNot) || (!(exception is WebException)))
+                if ((notify) || (!(exception is WebException)))
                 {
                     MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
-            return success;
+            return procedureSuccess;
         }
-
-        /*public UpdaterManager()
-        {
-            string fileName = (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe");
-
-            File.WriteAllBytes(fileName, Resources.Updater_Manager);
-            Process.Start(fileName).WaitForExit();
-            File.Delete(fileName);
-        }*/
     }
 }

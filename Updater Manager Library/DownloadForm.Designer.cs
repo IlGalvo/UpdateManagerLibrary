@@ -62,19 +62,19 @@
             this.labelCurrentByte.AutoSize = true;
             this.labelCurrentByte.Location = new System.Drawing.Point(12, 60);
             this.labelCurrentByte.Name = "labelCurrentByte";
-            this.labelCurrentByte.Size = new System.Drawing.Size(57, 20);
+            this.labelCurrentByte.Size = new System.Drawing.Size(70, 20);
             this.labelCurrentByte.TabIndex = 2;
-            this.labelCurrentByte.Text = "Current";
+            this.labelCurrentByte.Text = "00.00 MB";
             // 
             // labelTotalByte
             // 
             this.labelTotalByte.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.labelTotalByte.AutoSize = true;
-            this.labelTotalByte.Location = new System.Drawing.Point(457, 60);
+            this.labelTotalByte.Location = new System.Drawing.Point(429, 60);
             this.labelTotalByte.Name = "labelTotalByte";
-            this.labelTotalByte.Size = new System.Drawing.Size(42, 20);
+            this.labelTotalByte.Size = new System.Drawing.Size(70, 20);
             this.labelTotalByte.TabIndex = 3;
-            this.labelTotalByte.Text = "Total";
+            this.labelTotalByte.Text = "00.00 MB";
             // 
             // labelInformation
             // 

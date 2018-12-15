@@ -16,10 +16,10 @@ namespace UpdaterManagerLibrary
 
         private void UpdateForm_Load(object sender, EventArgs e)
         {
-            richTextBox1.Rtf = (@"{\rtf1\ansi " + versionHistory.Replace("\n", @"\line") + @"}");
+            richTextBoxChangelog.Rtf = (@"{\rtf1\ansi " + versionHistory.Replace("\n", @"\line") + @"}");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonUpdate_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
 

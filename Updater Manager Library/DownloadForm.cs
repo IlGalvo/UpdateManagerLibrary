@@ -46,21 +46,21 @@ namespace UpdaterManagerLibrary
             {
                 File.Delete(fileNamePath);
 
-                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(exception.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                //DialogResult = DialogResult.Cancel;
                 Close();
             }
         }
 
         private void WebClientTimeout_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            labelCurrentByte.Text = (Math.Round(((e.BytesReceived / 1024f) / 1024f), 2).ToString() + " Mb");
+            labelCurrentByte.Text = (Math.Round(((e.BytesReceived / 1024f) / 1024f), 2).ToString() + " MB");
 
             coloredProgressBarDownload.Value = e.ProgressPercentage;
 
-            labelTotalByte.Text = (Math.Round(((e.TotalBytesToReceive / 1024f) / 1024f), 2).ToString() + " Mb");
+            labelTotalByte.Text = (Math.Round(((e.TotalBytesToReceive / 1024f) / 1024f), 2).ToString() + " MB");
         }
+
         private void WebClientTimeout_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             labelInformation.Text = UpdateUtilities.DownloadCompletedInformation;
@@ -74,8 +74,9 @@ namespace UpdaterManagerLibrary
             using (SHA512 sha512 = SHA512.Create())
             {
                 string hashCode = BitConverter.ToString(sha512.ComputeHash(File.ReadAllBytes(e.UserState.ToString())));
+                string processname = Process.GetCurrentProcess().ProcessName;
 
-                processStartInfo.Arguments = string.Format(UpdateUtilities.UpdaterArguments, Process.GetCurrentProcess().ProcessName, e.UserState, hashCode);
+                processStartInfo.Arguments = string.Format(UpdateUtilities.UpdaterArguments, processname, e.UserState, hashCode);
             }
 
             processStartInfo.CreateNoWindow = true;
