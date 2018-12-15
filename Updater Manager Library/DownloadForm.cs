@@ -9,7 +9,7 @@ using UpdaterManagerLibrary.Properties;
 
 namespace UpdaterManagerLibrary
 {
-    public partial class DownloadForm : Form
+    internal partial class DownloadForm : Form
     {
         private string downloadUrl;
 
@@ -32,7 +32,7 @@ namespace UpdaterManagerLibrary
                 fileNamePath = Path.ChangeExtension(tmpFileNamePath, fileExtension);
                 File.Move(tmpFileNamePath, fileNamePath);
 
-                //labelInfo.Text = UpdateUtilities.UpdateInformation;
+                labelInformation.Text = UpdateUtilities.UpdateInformation;
 
                 using (WebClientTimeout webClientTimeout = new WebClientTimeout())
                 {
@@ -55,15 +55,15 @@ namespace UpdaterManagerLibrary
 
         private void WebClientTimeout_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            //labelCurrentByte.Text = (Math.Round(((e.BytesReceived / 1024f) / 1024f), 2).ToString() + " Mb");
+            labelCurrentByte.Text = (Math.Round(((e.BytesReceived / 1024f) / 1024f), 2).ToString() + " Mb");
 
-            coloredProgressBar1.Value = e.ProgressPercentage;
+            coloredProgressBarDownload.Value = e.ProgressPercentage;
 
-            //labelTotalByte.Text = (Math.Round(((e.TotalBytesToReceive / 1024f) / 1024f), 2).ToString() + " Mb");
+            labelTotalByte.Text = (Math.Round(((e.TotalBytesToReceive / 1024f) / 1024f), 2).ToString() + " Mb");
         }
         private void WebClientTimeout_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            //labelInfo.Text = UpdateUtilities.DownloadCompletedInformation;
+            labelInformation.Text = UpdateUtilities.DownloadCompletedInformation;
 
             string fileName = (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe");
             File.WriteAllBytes(fileName, Resources.Updater_Manager);
@@ -75,7 +75,7 @@ namespace UpdaterManagerLibrary
             {
                 string hashCode = BitConverter.ToString(sha512.ComputeHash(File.ReadAllBytes(e.UserState.ToString())));
 
-                processStartInfo.Arguments = string.Format(UpdateUtilities.UpdaterArguments, e.UserState, hashCode);
+                processStartInfo.Arguments = string.Format(UpdateUtilities.UpdaterArguments, Process.GetCurrentProcess().ProcessName, e.UserState, hashCode);
             }
 
             processStartInfo.CreateNoWindow = true;

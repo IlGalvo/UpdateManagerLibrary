@@ -28,59 +28,59 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.coloredProgressBar1 = new CustomControlCollection.ColoredProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.coloredProgressBarDownload = new CustomControlCollection.ColoredProgressBar();
+            this.labelTitle = new System.Windows.Forms.Label();
+            this.labelCurrentByte = new System.Windows.Forms.Label();
+            this.labelTotalByte = new System.Windows.Forms.Label();
+            this.labelInformation = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // coloredProgressBar1
+            // coloredProgressBarDownload
             // 
-            this.coloredProgressBar1.ForeColor = System.Drawing.Color.Blue;
-            this.coloredProgressBar1.Location = new System.Drawing.Point(12, 89);
-            this.coloredProgressBar1.Name = "coloredProgressBar1";
-            this.coloredProgressBar1.ShowPercentageText = true;
-            this.coloredProgressBar1.Size = new System.Drawing.Size(487, 38);
-            this.coloredProgressBar1.TabIndex = 0;
+            this.coloredProgressBarDownload.ForeColor = System.Drawing.Color.Blue;
+            this.coloredProgressBarDownload.Location = new System.Drawing.Point(12, 89);
+            this.coloredProgressBarDownload.Name = "coloredProgressBarDownload";
+            this.coloredProgressBarDownload.ShowPercentageText = true;
+            this.coloredProgressBarDownload.Size = new System.Drawing.Size(487, 38);
+            this.coloredProgressBarDownload.TabIndex = 0;
             // 
-            // label1
+            // labelTitle
             // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(511, 36);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Download aggiornamento in corso...";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTitle.Location = new System.Drawing.Point(0, 0);
+            this.labelTitle.Name = "labelTitle";
+            this.labelTitle.Size = new System.Drawing.Size(511, 36);
+            this.labelTitle.TabIndex = 1;
+            this.labelTitle.Text = "Download aggiornamento in corso...";
+            this.labelTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // label2
+            // labelCurrentByte
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 66);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 20);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "label2";
+            this.labelCurrentByte.AutoSize = true;
+            this.labelCurrentByte.Location = new System.Drawing.Point(12, 66);
+            this.labelCurrentByte.Name = "labelCurrentByte";
+            this.labelCurrentByte.Size = new System.Drawing.Size(57, 20);
+            this.labelCurrentByte.TabIndex = 2;
+            this.labelCurrentByte.Text = "Current";
             // 
-            // label3
+            // labelTotalByte
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(449, 66);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(50, 20);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "label3";
+            this.labelTotalByte.AutoSize = true;
+            this.labelTotalByte.Location = new System.Drawing.Point(457, 66);
+            this.labelTotalByte.Name = "labelTotalByte";
+            this.labelTotalByte.Size = new System.Drawing.Size(42, 20);
+            this.labelTotalByte.TabIndex = 3;
+            this.labelTotalByte.Text = "Total";
             // 
-            // label4
+            // labelInformation
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 130);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(50, 20);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "label4";
+            this.labelInformation.AutoSize = true;
+            this.labelInformation.Location = new System.Drawing.Point(12, 133);
+            this.labelInformation.Name = "labelInformation";
+            this.labelInformation.Size = new System.Drawing.Size(87, 20);
+            this.labelInformation.TabIndex = 4;
+            this.labelInformation.Text = "Information";
             // 
             // DownloadForm
             // 
@@ -88,11 +88,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(511, 161);
             this.ControlBox = false;
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.coloredProgressBar1);
+            this.Controls.Add(this.labelInformation);
+            this.Controls.Add(this.labelTotalByte);
+            this.Controls.Add(this.labelCurrentByte);
+            this.Controls.Add(this.labelTitle);
+            this.Controls.Add(this.coloredProgressBarDownload);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -107,10 +107,10 @@
 
         #endregion
 
-        private CustomControlCollection.ColoredProgressBar coloredProgressBar1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
+        private CustomControlCollection.ColoredProgressBar coloredProgressBarDownload;
+        private System.Windows.Forms.Label labelTitle;
+        private System.Windows.Forms.Label labelCurrentByte;
+        private System.Windows.Forms.Label labelTotalByte;
+        private System.Windows.Forms.Label labelInformation;
     }
 }

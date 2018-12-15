@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace UpdaterManagerLibrary
 {
-    public partial class UpdateForm : Form
+    internal partial class UpdateForm : Form
     {
         private string versionHistory;
 
