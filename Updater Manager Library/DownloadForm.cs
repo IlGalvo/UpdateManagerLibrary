@@ -11,8 +11,11 @@ namespace UpdaterManagerLibrary
 {
     internal partial class DownloadForm : Form
     {
+        #region GLOBAL_VARIABLE
         private string downloadUrl;
+        #endregion
 
+        #region FORM_EVENTS
         public DownloadForm(string downloadUrl)
         {
             InitializeComponent();
@@ -22,7 +25,7 @@ namespace UpdaterManagerLibrary
 
         private void DownloadForm_Load(object sender, EventArgs e)
         {
-            string fileNamePath = string.Empty;
+            /*string fileNamePath = string.Empty;
 
             try
             {
@@ -49,9 +52,11 @@ namespace UpdaterManagerLibrary
                 MessageBox.Show(exception.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Close();
-            }
+            }*/
         }
+        #endregion
 
+        #region WEBCLIENTTIMEOUT_EVENTS
         private void WebClientTimeout_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             labelCurrentByte.Text = (Math.Round(((e.BytesReceived / 1024f) / 1024f), 2).ToString() + " MB");
@@ -85,6 +90,17 @@ namespace UpdaterManagerLibrary
             Process.Start(processStartInfo).Dispose();
 
             DialogResult = DialogResult.OK;
+            Close();
+        }
+        #endregion
+
+        private void labelInformation_Click(object sender, EventArgs e)
+        {
+            coloredProgressBarDownload.PerformStep();
+        }
+
+        private void labelInformation_DoubleClick(object sender, EventArgs e)
+        {
             Close();
         }
     }
