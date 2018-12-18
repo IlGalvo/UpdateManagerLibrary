@@ -25,7 +25,7 @@ namespace UpdaterManagerLibrary
 
         private void DownloadForm_Load(object sender, EventArgs e)
         {
-            /*string fileNamePath = string.Empty;
+            string fileNamePath = string.Empty;
 
             try
             {
@@ -52,18 +52,18 @@ namespace UpdaterManagerLibrary
                 MessageBox.Show(exception.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 Close();
-            }*/
+            }
         }
         #endregion
 
         #region WEBCLIENTTIMEOUT_EVENTS
         private void WebClientTimeout_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            labelCurrentByte.Text = (Math.Round(((e.BytesReceived / 1024f) / 1024f), 2).ToString() + " MB");
+            labelCurrentByte.Text = (((e.BytesReceived / 1024f) / 1024f).ToString("00. 00") + " MB");
 
             coloredProgressBarDownload.Value = e.ProgressPercentage;
 
-            labelTotalByte.Text = (Math.Round(((e.TotalBytesToReceive / 1024f) / 1024f), 2).ToString() + " MB");
+            labelTotalByte.Text = (((e.TotalBytesToReceive / 1024f) / 1024f).ToString("00. 00") + " MB");
         }
 
         private void WebClientTimeout_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
@@ -93,15 +93,5 @@ namespace UpdaterManagerLibrary
             Close();
         }
         #endregion
-
-        private void labelInformation_Click(object sender, EventArgs e)
-        {
-            coloredProgressBarDownload.PerformStep();
-        }
-
-        private void labelInformation_DoubleClick(object sender, EventArgs e)
-        {
-            Close();
-        }
     }
 }
