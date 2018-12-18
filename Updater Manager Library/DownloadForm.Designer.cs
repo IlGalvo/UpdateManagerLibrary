@@ -53,7 +53,7 @@
             this.labelCurrentByte.AutoSize = true;
             this.labelCurrentByte.BackColor = System.Drawing.Color.Transparent;
             this.labelCurrentByte.ForeColor = System.Drawing.Color.White;
-            this.labelCurrentByte.Location = new System.Drawing.Point(12, 53);
+            this.labelCurrentByte.Location = new System.Drawing.Point(12, 52);
             this.labelCurrentByte.Name = "labelCurrentByte";
             this.labelCurrentByte.Size = new System.Drawing.Size(70, 20);
             this.labelCurrentByte.TabIndex = 2;
@@ -65,7 +65,7 @@
             this.labelTotalByte.AutoSize = true;
             this.labelTotalByte.BackColor = System.Drawing.Color.Transparent;
             this.labelTotalByte.ForeColor = System.Drawing.Color.White;
-            this.labelTotalByte.Location = new System.Drawing.Point(402, 53);
+            this.labelTotalByte.Location = new System.Drawing.Point(402, 52);
             this.labelTotalByte.Name = "labelTotalByte";
             this.labelTotalByte.Size = new System.Drawing.Size(70, 20);
             this.labelTotalByte.TabIndex = 3;
@@ -77,7 +77,7 @@
             this.labelInformation.AutoSize = true;
             this.labelInformation.BackColor = System.Drawing.Color.Transparent;
             this.labelInformation.ForeColor = System.Drawing.Color.White;
-            this.labelInformation.Location = new System.Drawing.Point(12, 120);
+            this.labelInformation.Location = new System.Drawing.Point(12, 119);
             this.labelInformation.Name = "labelInformation";
             this.labelInformation.Size = new System.Drawing.Size(87, 20);
             this.labelInformation.TabIndex = 4;
@@ -90,7 +90,7 @@
             this.coloredProgressBarDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.coloredProgressBarDownload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(70)))), ((int)(((byte)(96)))));
             this.coloredProgressBarDownload.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.coloredProgressBarDownload.Location = new System.Drawing.Point(12, 76);
+            this.coloredProgressBarDownload.Location = new System.Drawing.Point(12, 75);
             this.coloredProgressBarDownload.Name = "coloredProgressBarDownload";
             this.coloredProgressBarDownload.ProgressColor = System.Drawing.Color.RoyalBlue;
             this.coloredProgressBarDownload.ShowPercentageText = true;
