@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Windows.Forms;
 using UpdaterManagerLibrary.Properties;
 
@@ -59,16 +60,20 @@ namespace UpdaterManagerLibrary
         #region WEBCLIENTTIMEOUT_EVENTS
         private void WebClientTimeout_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            labelCurrentByte.Text = (((e.BytesReceived / 1024f) / 1024f).ToString("00. 00") + " MB");
+            labelCurrentByte.Text = (((e.BytesReceived / 1024f) / 1024f).ToString("00.00") + " MB");
 
             coloredProgressBarDownload.Value = e.ProgressPercentage;
 
-            labelTotalByte.Text = (((e.TotalBytesToReceive / 1024f) / 1024f).ToString("00. 00") + " MB");
+            labelTotalByte.Text = (((e.TotalBytesToReceive / 1024f) / 1024f).ToString("00.00") + " MB");
         }
 
         private void WebClientTimeout_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             labelInformation.Text = UpdateUtilities.DownloadCompletedInformation;
+            // Temp
+            Application.DoEvents();
+            Thread.Sleep(1000);
+            // Temp
 
             string fileName = (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe");
             File.WriteAllBytes(fileName, Resources.Updater_Manager);
