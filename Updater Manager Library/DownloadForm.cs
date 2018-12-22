@@ -69,32 +69,64 @@ namespace UpdaterManagerLibrary
 
         private void WebClientTimeout_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            labelInformation.Text = UpdateUtilities.DownloadCompletedInformation;
-            // Temp
-            Application.DoEvents();
-            Thread.Sleep(1000);
-            // Temp
-
-            string fileName = (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe");
-            File.WriteAllBytes(fileName, Resources.Updater_Manager);
-
-            ProcessStartInfo processStartInfo = new ProcessStartInfo();
-            processStartInfo.FileName = fileName;
-
-            using (SHA512 sha512 = SHA512.Create())
+            if (e.Cancelled)
             {
-                string hashCode = BitConverter.ToString(sha512.ComputeHash(File.ReadAllBytes(e.UserState.ToString())));
-                string processname = Process.GetCurrentProcess().ProcessName;
+                labelInformation.Text = "Download interrotto.";
+                // Temp
+                Application.DoEvents();
+                Thread.Sleep(1000);
+                // Temp
 
-                processStartInfo.Arguments = string.Format(UpdateUtilities.UpdaterArguments, processname, e.UserState, hashCode);
+                if (File.Exists(e.UserState.ToString()))
+                {
+                    File.Delete(e.UserState.ToString());
+                }
+            }
+            else if (e.Error != null)
+            {
+                labelInformation.Text = "Errore durante il download.";
+                // Temp
+                Application.DoEvents();
+                Thread.Sleep(1000);
+                // Temp
+
+                if (File.Exists(e.UserState.ToString()))
+                {
+                    File.Delete(e.UserState.ToString());
+                }
+
+                MessageBox.Show(e.Error.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                labelInformation.Text = UpdateUtilities.DownloadCompletedInformation;
+                // Temp
+                Application.DoEvents();
+                Thread.Sleep(1000);
+                // Temp
+
+                string fileName = Path.Combine(Path.GetTempPath(), (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe"));
+                File.WriteAllBytes(fileName, Resources.Updater_Manager);
+
+                ProcessStartInfo processStartInfo = new ProcessStartInfo();
+                processStartInfo.FileName = fileName;
+
+                using (SHA512 sha512 = SHA512.Create())
+                {
+                    string hashCode = BitConverter.ToString(sha512.ComputeHash(File.ReadAllBytes(e.UserState.ToString())));
+                    string processname = Process.GetCurrentProcess().ProcessName;
+
+                    processStartInfo.Arguments = string.Format(UpdateUtilities.UpdaterArguments, processname, e.UserState, hashCode);
+                }
+
+                processStartInfo.CreateNoWindow = true;
+                processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+                Process.Start(processStartInfo).Dispose();
+
+                DialogResult = DialogResult.OK;
             }
 
-            processStartInfo.CreateNoWindow = true;
-            processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-            Process.Start(processStartInfo).Dispose();
-
-            DialogResult = DialogResult.OK;
             Close();
         }
         #endregion
