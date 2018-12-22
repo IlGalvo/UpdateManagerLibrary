@@ -111,9 +111,9 @@ namespace UpdaterManagerLibrary
                 ProcessStartInfo processStartInfo = new ProcessStartInfo();
                 processStartInfo.FileName = fileName;
 
-                using (SHA512 sha512 = SHA512.Create())
+                using (SHA256 sha256 = SHA256.Create())
                 {
-                    string hashCode = BitConverter.ToString(sha512.ComputeHash(File.ReadAllBytes(e.UserState.ToString())));
+                    string hashCode = BitConverter.ToString(sha256.ComputeHash(File.ReadAllBytes(e.UserState.ToString())));
                     string processname = Process.GetCurrentProcess().ProcessName;
 
                     processStartInfo.Arguments = string.Format(UpdateUtilities.UpdaterArguments, processname, e.UserState, hashCode);

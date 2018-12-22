@@ -51,6 +51,8 @@
             // 
             this.coloredProgressBarDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.coloredProgressBarDownload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(70)))), ((int)(((byte)(96)))));
+            this.coloredProgressBarDownload.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.coloredProgressBarDownload.ForeColor = System.Drawing.Color.Navy;
             this.coloredProgressBarDownload.Location = new System.Drawing.Point(12, 86);
             this.coloredProgressBarDownload.Name = "coloredProgressBarDownload";

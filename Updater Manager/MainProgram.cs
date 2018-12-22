@@ -29,9 +29,9 @@ namespace UpdaterManager
                     (File.Exists(args[2])) &&
                     (!string.IsNullOrEmpty(args[3])))
                 {
-                    using (SHA512 sha512 = SHA512.Create())
+                    using (SHA256 sha256 = SHA256.Create())
                     {
-                        if (BitConverter.ToString(sha512.ComputeHash(File.ReadAllBytes(args[2]))) == args[3])
+                        if (BitConverter.ToString(sha256.ComputeHash(File.ReadAllBytes(args[2]))) == args[3])
                         {
                             foreach (Process process in Process.GetProcessesByName(args[1]))
                             {
