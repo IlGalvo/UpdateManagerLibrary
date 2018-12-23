@@ -8,16 +8,16 @@ namespace UpdaterManagerLibrary
 {
     public static class UpdaterManager
     {
-        public static bool CheckForUpdates(Version currentVersion, Uri url, bool notify)
+        public static bool CheckForUpdates(Version currentVersion, string downloadUrl, bool verboseNotify)
         {
-            bool procedureSuccess = false;
+            bool operationSuccess = false;
 
             try
             {
-                int timeout = ((!notify) ? UpdateUtilities.DefaultTimeout : UpdateUtilities.LongTimeout);
+                int connectionTimeout = ((!verboseNotify) ? UpdateUtilities.DefaultTimeout : UpdateUtilities.LongTimeout);
 
-                using (WebClientTimeout webClientTimeout = new WebClientTimeout(timeout))
-                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(url)))
+                using (WebClientTimeout webClientTimeout = new WebClientTimeout(connectionTimeout))
+                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(downloadUrl))))
                 {
                     Versioning versioning = ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
 
@@ -33,30 +33,30 @@ namespace UpdaterManagerLibrary
                                     {
                                         if (downloadForm.ShowDialog() == DialogResult.OK)
                                         {
-                                            procedureSuccess = true;
+                                            operationSuccess = true;
                                         }
                                     }
                                 }
                             }
                         }
-                        else if (notify)
+                        else if (verboseNotify)
                         {
                             string text = "Nessun aggiornamento trovato.";
 
-                            MessageBox.Show(text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(text, "Informazione", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
             }
             catch (Exception exception)
             {
-                if ((notify) || (!(exception is WebException)))
+                if ((verboseNotify) || (!(exception is WebException)))
                 {
-                    MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(exception.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
-            return procedureSuccess;
+            return operationSuccess;
         }
     }
 }
