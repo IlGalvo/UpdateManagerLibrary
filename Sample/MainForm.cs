@@ -13,7 +13,7 @@ namespace Sample
 
         private void buttonCheckUpdates_Click(object sender, EventArgs e)
         {
-            string url = "https://onedrive.live.com/download?resid=7D7FF9DFDA23C644!1341&authkey=!AKmePXmib2r6-sU";
+            string url = "https://onedrive.live.com/download?resid=7D7FF9DFDA23C644!1341&authkey=!AAPfdJrVo5UeVkE";
 
             if (UpdaterManager.CheckForUpdates(new Version(Application.ProductVersion), new Uri(url), false))
             {

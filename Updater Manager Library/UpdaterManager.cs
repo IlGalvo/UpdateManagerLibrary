@@ -39,12 +39,12 @@ namespace UpdaterManagerLibrary
                                 }
                             }
                         }
-                    }
-                    else if (notify)
-                    {
-                        string text = "Nessun aggiornamento trovato.";
+                        else if (notify)
+                        {
+                            string text = "Nessun aggiornamento trovato.";
 
-                        MessageBox.Show(text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
                 }
             }
