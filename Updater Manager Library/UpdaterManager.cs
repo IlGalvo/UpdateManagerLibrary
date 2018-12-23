@@ -8,7 +8,7 @@ namespace UpdaterManagerLibrary
 {
     public static class UpdaterManager
     {
-        public static bool CheckForUpdates(Version currentVersion, string downloadUrl, bool verboseNotify)
+        public static bool CheckForUpdates(Version currentVersion, string updateCheckerUrl, bool verboseNotify)
         {
             bool operationSuccess = false;
 
@@ -17,34 +17,29 @@ namespace UpdaterManagerLibrary
                 int connectionTimeout = ((!verboseNotify) ? UpdateUtilities.DefaultTimeout : UpdateUtilities.LongTimeout);
 
                 using (WebClientTimeout webClientTimeout = new WebClientTimeout(connectionTimeout))
-                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(downloadUrl))))
+                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(updateCheckerUrl))))
                 {
                     Versioning versioning = ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
 
-                    if (Version.TryParse(versioning.LatestVersion, out Version latestVersion))
+                    if (currentVersion < Version.Parse(versioning.LatestVersion))
                     {
-                        if (currentVersion < latestVersion)
+                        using (UpdateForm updateForm = new UpdateForm(versioning.VersionHistory))
                         {
-                            using (UpdateForm updateForm = new UpdateForm(versioning.VersionHistory))
+                            if (updateForm.ShowDialog() == DialogResult.OK)
                             {
-                                if (updateForm.ShowDialog() == DialogResult.OK)
+                                using (DownloadForm downloadForm = new DownloadForm(versioning.DownloadUrl, versioning.Sha256))
                                 {
-                                    using (DownloadForm downloadForm = new DownloadForm(versioning.DownloadUrl, versioning.Sha256))
+                                    if (downloadForm.ShowDialog() == DialogResult.OK)
                                     {
-                                        if (downloadForm.ShowDialog() == DialogResult.OK)
-                                        {
-                                            operationSuccess = true;
-                                        }
+                                        operationSuccess = true;
                                     }
                                 }
                             }
                         }
-                        else if (verboseNotify)
-                        {
-                            string text = "Nessun aggiornamento trovato.";
-
-                            MessageBox.Show(text, "Informazione", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
+                    }
+                    else if (verboseNotify)
+                    {
+                        MessageBox.Show("Nessun aggiornamento trovato.", "Informazione", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
