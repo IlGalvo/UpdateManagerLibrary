@@ -16,18 +16,18 @@ namespace UpdaterManagerLibrary
         private WebClientTimeout webClientTimeout;
 
         private string downloadUrl;
-        private string sha256;
+        private string remoteSha256;
         #endregion
 
         #region FORM_EVENTS
-        public DownloadForm(string downloadUrl, string sha256)
+        public DownloadForm(string downloadUrl, string remoteSha256)
         {
             InitializeComponent();
 
             webClientTimeout = new WebClientTimeout();
 
             this.downloadUrl = downloadUrl;
-            this.sha256 = sha256;
+            this.remoteSha256 = remoteSha256;
         }
 
         private void DownloadForm_Load(object sender, EventArgs e)
@@ -91,17 +91,21 @@ namespace UpdaterManagerLibrary
                 ManageResultOperations(e.UserState.ToString(), "Errore durante il download.");
 
                 MessageBox.Show(e.Error.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
             }
             else
             {
                 using (SHA256 sha256 = SHA256.Create())
                 {
-                    if (BitConverter.ToString(sha256.ComputeHash(File.ReadAllBytes(e.UserState.ToString()))) != this.sha256)
+                    byte[] downloadedFile = File.ReadAllBytes(e.UserState.ToString());
+                    string localSha256 = BitConverter.ToString(sha256.ComputeHash(downloadedFile)).Replace("-", string.Empty);
+
+                    if (localSha256 != remoteSha256)
                     {
                         ManageResultOperations(e.UserState.ToString(), "File danneggiato.");
 
                         MessageBox.Show("File danneggiato.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
+                        Close();
                     }
                 }
 
@@ -113,7 +117,7 @@ namespace UpdaterManagerLibrary
                 ProcessStartInfo processStartInfo = new ProcessStartInfo
                 {
                     FileName = fileName,
-                    Arguments = string.Format(UpdateUtilities.UpdaterArguments, Process.GetCurrentProcess().ProcessName, e.UserState),
+                    Arguments = string.Format(UpdateUtilities.UpdaterArguments, Process.GetCurrentProcess().MainModule.FileName, e.UserState),
                     CreateNoWindow = true,
                     WindowStyle = ProcessWindowStyle.Hidden
                 };
