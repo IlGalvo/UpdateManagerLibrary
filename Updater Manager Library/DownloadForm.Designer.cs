@@ -49,7 +49,7 @@
             // 
             // coloredProgressBarDownload
             // 
-            this.coloredProgressBarDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.coloredProgressBarDownload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.coloredProgressBarDownload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(70)))), ((int)(((byte)(96)))));
             this.coloredProgressBarDownload.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -97,7 +97,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(70)))), ((int)(((byte)(96)))));
             this.ClientSize = new System.Drawing.Size(484, 153);
-            this.ControlBox = false;
             this.Controls.Add(this.labelInformation);
             this.Controls.Add(this.labelTotalByte);
             this.Controls.Add(this.labelCurrentByte);
@@ -105,6 +104,7 @@
             this.Controls.Add(this.labelTitle);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = Properties.Resources.Icon;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximumSize = new System.Drawing.Size(500, 192);
             this.MinimumSize = new System.Drawing.Size(500, 192);
@@ -112,6 +112,7 @@
             this.Opacity = 0.99D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DownloadForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DownloadForm_FormClosing);
             this.Load += new System.EventHandler(this.DownloadForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

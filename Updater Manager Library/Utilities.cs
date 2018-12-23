@@ -3,7 +3,7 @@
     internal static class UpdateUtilities
     {
         #region GENERAL
-        public static string UpdaterArguments { get { return ("/update \"{0}\" \"{1}\" \"{2}\""); } }
+        public static string UpdaterArguments { get { return ("/update \"{0}\" \"{1}\""); } }
         #endregion
 
         #region TIMEOUT

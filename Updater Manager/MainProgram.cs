@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -26,63 +25,56 @@ namespace UpdaterManager
                     (args.Length == Utilities.ParametersNumber) &&
                     (args[0] == Utilities.UpdateAction) &&
                     (!string.IsNullOrEmpty(args[1])) &&
-                    (File.Exists(args[2])) &&
-                    (!string.IsNullOrEmpty(args[3])))
+                    (File.Exists(args[2])))
                 {
-                    using (SHA256 sha256 = SHA256.Create())
+                    foreach (Process process in Process.GetProcessesByName(args[1]))
                     {
-                        if (BitConverter.ToString(sha256.ComputeHash(File.ReadAllBytes(args[2]))) == args[3])
+                        using (process)
                         {
-                            foreach (Process process in Process.GetProcessesByName(args[1]))
+                            if ((!process.WaitForExit(Utilities.MaxWaitTime)))
                             {
-                                using (process)
+                                if (!process.CloseMainWindow())
                                 {
-                                    if ((!process.WaitForExit(Utilities.MaxWaitTime)))
+                                    process.Kill();
+                                }
+                            }
+                        }
+
+                        try
+                        {
+                            using (ZipArchive zipArchive = ZipFile.OpenRead(args[2]))
+                            {
+                                foreach (ZipArchiveEntry zipArchiveEntry in zipArchive.Entries)
+                                {
+                                    string completeFileName = Path.Combine(Environment.CurrentDirectory, zipArchiveEntry.FullName);
+                                    string directoryName = Path.GetDirectoryName(completeFileName);
+
+                                    if ((directoryName != Environment.CurrentDirectory) && (!Directory.Exists(directoryName)))
                                     {
-                                        if (!process.CloseMainWindow())
-                                        {
-                                            process.Kill();
-                                        }
+                                        Directory.CreateDirectory(directoryName);
                                     }
+
+                                    zipArchiveEntry.ExtractToFile(completeFileName, true);
                                 }
                             }
 
-                            try
-                            {
-                                using (ZipArchive zipArchive = ZipFile.OpenRead(args[2]))
-                                {
-                                    foreach (ZipArchiveEntry zipArchiveEntry in zipArchive.Entries)
-                                    {
-                                        string completeFileName = Path.Combine(Environment.CurrentDirectory, zipArchiveEntry.FullName);
-                                        string directoryName = Path.GetDirectoryName(completeFileName);
+                            File.WriteAllText(Utilities.FinalizerName, string.Format(Utilities.FinalizerContent, (args[1] + ".exe")));
+                            File.SetAttributes(Utilities.FinalizerName, FileAttributes.Hidden);
 
-                                        if ((directoryName != Environment.CurrentDirectory) && (!Directory.Exists(directoryName)))
-                                        {
-                                            Directory.CreateDirectory(directoryName);
-                                        }
+                            ProcessStartInfo processStartInfo = new ProcessStartInfo();
+                            processStartInfo.FileName = Utilities.FinalizerName;
+                            processStartInfo.CreateNoWindow = true;
+                            processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
-                                        zipArchiveEntry.ExtractToFile(completeFileName, true);
-                                    }
-                                }
-
-                                File.WriteAllText(Utilities.FinalizerName, string.Format(Utilities.FinalizerContent, (args[1] + ".exe")));
-                                File.SetAttributes(Utilities.FinalizerName, FileAttributes.Hidden);
-
-                                ProcessStartInfo processStartInfo = new ProcessStartInfo();
-                                processStartInfo.FileName = Utilities.FinalizerName;
-                                processStartInfo.CreateNoWindow = true;
-                                processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-                                Process.Start(processStartInfo).Dispose();
-                            }
-                            catch (Exception exception)
-                            {
-                                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            finally
-                            {
-                                File.Delete(args[2]);
-                            }
+                            Process.Start(processStartInfo).Dispose();
+                        }
+                        catch (Exception exception)
+                        {
+                            MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        finally
+                        {
+                            File.Delete(args[2]);
                         }
                     }
                 }

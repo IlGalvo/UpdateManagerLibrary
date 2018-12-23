@@ -5,7 +5,7 @@ namespace UpdaterManager
     internal static class Utilities
     {
         #region GENERAL
-        public static int ParametersNumber { get { return 4; } }
+        public static int ParametersNumber { get { return 3; } }
 
         public static int MaxWaitTime { get { return 5000; } }
         #endregion

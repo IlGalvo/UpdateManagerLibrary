@@ -29,7 +29,7 @@ namespace UpdaterManagerLibrary
                             {
                                 if (updateForm.ShowDialog() == DialogResult.OK)
                                 {
-                                    using (DownloadForm downloadForm = new DownloadForm(versioning.DownloadUrl))
+                                    using (DownloadForm downloadForm = new DownloadForm(versioning.DownloadUrl, versioning.Sha256))
                                     {
                                         if (downloadForm.ShowDialog() == DialogResult.OK)
                                         {

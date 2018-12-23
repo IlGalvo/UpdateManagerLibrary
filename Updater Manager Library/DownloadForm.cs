@@ -13,15 +13,21 @@ namespace UpdaterManagerLibrary
     internal partial class DownloadForm : Form
     {
         #region GLOBAL_VARIABLE
+        private WebClientTimeout webClientTimeout;
+
         private string downloadUrl;
+        private string sha256;
         #endregion
 
         #region FORM_EVENTS
-        public DownloadForm(string downloadUrl)
+        public DownloadForm(string downloadUrl, string sha256)
         {
             InitializeComponent();
 
+            webClientTimeout = new WebClientTimeout();
+
             this.downloadUrl = downloadUrl;
+            this.sha256 = sha256;
         }
 
         private void DownloadForm_Load(object sender, EventArgs e)
@@ -38,13 +44,10 @@ namespace UpdaterManagerLibrary
 
                 labelInformation.Text = UpdateUtilities.UpdateInformation;
 
-                using (WebClientTimeout webClientTimeout = new WebClientTimeout())
-                {
-                    webClientTimeout.DownloadProgressChanged += WebClientTimeout_DownloadProgressChanged;
-                    webClientTimeout.DownloadFileCompleted += WebClientTimeout_DownloadFileCompleted;
+                webClientTimeout.DownloadProgressChanged += WebClientTimeout_DownloadProgressChanged;
+                webClientTimeout.DownloadFileCompleted += WebClientTimeout_DownloadFileCompleted;
 
-                    webClientTimeout.DownloadFileAsync(new Uri(downloadUrl), fileNamePath, fileNamePath);
-                }
+                webClientTimeout.DownloadFileAsync(new Uri(downloadUrl), fileNamePath, fileNamePath);
             }
             catch (Exception exception)
             {
@@ -54,6 +57,16 @@ namespace UpdaterManagerLibrary
 
                 Close();
             }
+        }
+
+        private void DownloadForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (webClientTimeout.IsBusy)
+            {
+                webClientTimeout.CancelAsync();
+            }
+
+            webClientTimeout.Dispose();
         }
         #endregion
 
@@ -71,63 +84,58 @@ namespace UpdaterManagerLibrary
         {
             if (e.Cancelled)
             {
-                labelInformation.Text = "Download interrotto.";
-                // Temp
-                Application.DoEvents();
-                Thread.Sleep(1000);
-                // Temp
-
-                if (File.Exists(e.UserState.ToString()))
-                {
-                    File.Delete(e.UserState.ToString());
-                }
+                ManageResultOperations(e.UserState.ToString(), "Download interrotto.");
             }
             else if (e.Error != null)
             {
-                labelInformation.Text = "Errore durante il download.";
-                // Temp
-                Application.DoEvents();
-                Thread.Sleep(1000);
-                // Temp
-
-                if (File.Exists(e.UserState.ToString()))
-                {
-                    File.Delete(e.UserState.ToString());
-                }
+                ManageResultOperations(e.UserState.ToString(), "Errore durante il download.");
 
                 MessageBox.Show(e.Error.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                labelInformation.Text = UpdateUtilities.DownloadCompletedInformation;
-                // Temp
-                Application.DoEvents();
-                Thread.Sleep(1000);
-                // Temp
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    if (BitConverter.ToString(sha256.ComputeHash(File.ReadAllBytes(e.UserState.ToString()))) != this.sha256)
+                    {
+                        ManageResultOperations(e.UserState.ToString(), "File danneggiato.");
+
+                        MessageBox.Show("File danneggiato.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+
+                ManageResultOperations(string.Empty, UpdateUtilities.DownloadCompletedInformation);
 
                 string fileName = Path.Combine(Path.GetTempPath(), (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe"));
                 File.WriteAllBytes(fileName, Resources.Updater_Manager);
 
-                ProcessStartInfo processStartInfo = new ProcessStartInfo();
-                processStartInfo.FileName = fileName;
-
-                using (SHA256 sha256 = SHA256.Create())
+                ProcessStartInfo processStartInfo = new ProcessStartInfo
                 {
-                    string hashCode = BitConverter.ToString(sha256.ComputeHash(File.ReadAllBytes(e.UserState.ToString())));
-                    string processname = Process.GetCurrentProcess().ProcessName;
-
-                    processStartInfo.Arguments = string.Format(UpdateUtilities.UpdaterArguments, processname, e.UserState, hashCode);
-                }
-
-                processStartInfo.CreateNoWindow = true;
-                processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    FileName = fileName,
+                    Arguments = string.Format(UpdateUtilities.UpdaterArguments, Process.GetCurrentProcess().ProcessName, e.UserState),
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
 
                 Process.Start(processStartInfo).Dispose();
 
                 DialogResult = DialogResult.OK;
+                Close();
+            }
+        }
+
+        private void ManageResultOperations(string fileName, string text)
+        {
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
             }
 
-            Close();
+            labelInformation.Text = text;
+
+            Application.DoEvents();
+            Thread.Sleep(1000);
         }
         #endregion
     }
