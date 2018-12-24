@@ -36,13 +36,12 @@ namespace UpdaterManagerLibrary
 
             try
             {
+                labelInformation.Text = "Sto scaricando l'aggiornamento...";
+
                 string tmpFileNamePath = Path.GetTempFileName();
-                string fileExtension = ".zip";
+                fileNamePath = Path.ChangeExtension(tmpFileNamePath, ".zip");
 
-                fileNamePath = Path.ChangeExtension(tmpFileNamePath, fileExtension);
                 File.Move(tmpFileNamePath, fileNamePath);
-
-                labelInformation.Text = UpdateUtilities.UpdateInformation;
 
                 webClientTimeout.DownloadProgressChanged += WebClientTimeout_DownloadProgressChanged;
                 webClientTimeout.DownloadFileCompleted += WebClientTimeout_DownloadFileCompleted;
@@ -51,11 +50,7 @@ namespace UpdaterManagerLibrary
             }
             catch (Exception exception)
             {
-                File.Delete(fileNamePath);
-
-                MessageBox.Show(exception.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                Close();
+                ManageResultOperations(fileNamePath, "Errore generico.", exception.Message);
             }
         }
 
@@ -84,62 +79,78 @@ namespace UpdaterManagerLibrary
         {
             if (e.Cancelled)
             {
-                ManageResultOperations(e.UserState.ToString(), "Download interrotto.");
+                ManageResultOperations(e.UserState.ToString(), "Download interrotto.", string.Empty);
             }
             else if (e.Error != null)
             {
-                ManageResultOperations(e.UserState.ToString(), "Errore durante il download.");
-
-                MessageBox.Show(e.Error.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
+                ManageResultOperations(e.UserState.ToString(), "Errore durante il download.", e.Error.Message);
             }
             else
             {
-                using (SHA256 sha256 = SHA256.Create())
+                try
                 {
-                    byte[] downloadedFile = File.ReadAllBytes(e.UserState.ToString());
-                    string localSha256 = BitConverter.ToString(sha256.ComputeHash(downloadedFile)).Replace("-", string.Empty);
-
-                    if (localSha256 != remoteSha256)
+                    using (SHA256 sha256 = SHA256.Create())
                     {
-                        ManageResultOperations(e.UserState.ToString(), "File danneggiato.");
+                        byte[] downloadedFile = File.ReadAllBytes(e.UserState.ToString());
+                        string localSha256 = BitConverter.ToString(sha256.ComputeHash(downloadedFile)).Replace("-", string.Empty);
 
-                        MessageBox.Show("File danneggiato.", "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Close();
+                        if (localSha256 == remoteSha256)
+                        {
+                            ManageResultOperations(string.Empty, "Scaricamento completato. Avvio installazione.", string.Empty);
+
+                            string fileName = Path.Combine(Path.GetTempPath(), (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe"));
+                            File.WriteAllBytes(fileName, Resources.Updater_Manager);
+
+                            string processFileName = Process.GetCurrentProcess().MainModule.FileName;
+
+                            ProcessStartInfo processStartInfo = new ProcessStartInfo
+                            {
+                                FileName = fileName,
+                                Arguments = string.Format(UpdateUtilities.UpdaterArguments, processFileName, e.UserState),
+                                CreateNoWindow = true,
+                                WindowStyle = ProcessWindowStyle.Hidden
+                            };
+
+                            Process.Start(processStartInfo).Dispose();
+
+                            DialogResult = DialogResult.OK;
+                            Close();
+                        }
+                        else
+                        {
+                            ManageResultOperations(e.UserState.ToString(), "File danneggiato.", "File danneggiato.");
+                        }
                     }
                 }
-
-                ManageResultOperations(string.Empty, UpdateUtilities.DownloadCompletedInformation);
-
-                string fileName = Path.Combine(Path.GetTempPath(), (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe"));
-                File.WriteAllBytes(fileName, Resources.Updater_Manager);
-
-                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                catch (Exception exception)
                 {
-                    FileName = fileName,
-                    Arguments = string.Format(UpdateUtilities.UpdaterArguments, Process.GetCurrentProcess().MainModule.FileName, e.UserState),
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
-
-                Process.Start(processStartInfo).Dispose();
-
-                DialogResult = DialogResult.OK;
-                Close();
+                    ManageResultOperations(e.UserState.ToString(), "Errore generico.", exception.Message);
+                }
             }
         }
 
-        private void ManageResultOperations(string fileName, string text)
+        private void ManageResultOperations(string fileToDelete, string informationText, string exceptionMessage)
         {
-            if (File.Exists(fileName))
+            if (File.Exists(fileToDelete))
             {
-                File.Delete(fileName);
+                File.Delete(fileToDelete);
             }
 
-            labelInformation.Text = text;
+            labelInformation.Text = informationText;
 
             Application.DoEvents();
             Thread.Sleep(1000);
+
+            if (!string.IsNullOrEmpty(exceptionMessage))
+            {
+                MessageBox.Show(exceptionMessage, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Close();
+            }
+            /*else
+            {
+                Thread.Sleep(1000);
+            }*/
         }
         #endregion
     }

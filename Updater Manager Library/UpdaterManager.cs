@@ -8,16 +8,16 @@ namespace UpdaterManagerLibrary
 {
     public static class UpdaterManager
     {
-        public static bool CheckForUpdates(Version currentVersion, string updateCheckerUrl, bool verboseNotify)
+        public static bool CheckForUpdates(Version currentVersion, string updateInformationUrl, bool verboseNotifier)
         {
             bool operationSuccess = false;
 
             try
             {
-                int connectionTimeout = ((!verboseNotify) ? UpdateUtilities.DefaultTimeout : UpdateUtilities.LongTimeout);
+                int connectionTimeout = ((!verboseNotifier) ? UpdateUtilities.DefaultTimeout : UpdateUtilities.LongTimeout);
 
                 using (WebClientTimeout webClientTimeout = new WebClientTimeout(connectionTimeout))
-                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(updateCheckerUrl))))
+                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(updateInformationUrl))))
                 {
                     Versioning versioning = ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
 
@@ -37,7 +37,7 @@ namespace UpdaterManagerLibrary
                             }
                         }
                     }
-                    else if (verboseNotify)
+                    else if (verboseNotifier)
                     {
                         MessageBox.Show("Nessun aggiornamento trovato.", "Informazione", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -45,7 +45,7 @@ namespace UpdaterManagerLibrary
             }
             catch (Exception exception)
             {
-                if ((verboseNotify) || (!(exception is WebException)))
+                if ((verboseNotifier) || (!(exception is WebException)))
                 {
                     MessageBox.Show(exception.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

@@ -11,11 +11,5 @@
 
         public static int LongTimeout { get { return 3500; } }
         #endregion
-
-        #region LABELINFO
-        public static string UpdateInformation { get { return ("Sto scaricando l'aggiornamento..."); } }
-
-        public static string DownloadCompletedInformation { get { return ("Scaricamento completato. Avvio installazione."); } }
-        #endregion
     }
 }
