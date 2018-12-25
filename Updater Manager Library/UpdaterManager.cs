@@ -14,7 +14,7 @@ namespace UpdaterManagerLibrary
 
             try
             {
-                int connectionTimeout = ((!verboseNotifier) ? UpdateUtilities.DefaultTimeout : UpdateUtilities.LongTimeout);
+                int connectionTimeout = ((!verboseNotifier) ? Utilities.DefaultTimeout : Utilities.LongTimeout);
 
                 using (WebClientTimeout webClientTimeout = new WebClientTimeout(connectionTimeout))
                 using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(updateInformationUrl))))

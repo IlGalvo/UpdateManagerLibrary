@@ -28,6 +28,8 @@ namespace UpdaterManagerLibrary
 
             this.downloadUrl = downloadUrl;
             this.remoteSha256 = remoteSha256;
+
+            Thread.Sleep(((int)(Utilities.DefaultSleepTime / 2.8)));
         }
 
         private void DownloadForm_Shown(object sender, EventArgs e)
@@ -64,7 +66,7 @@ namespace UpdaterManagerLibrary
                 webClientTimeout.CancelAsync();
 
                 SetLabelText("Download interrotto.");
-                SetLabelText("Download interrotto.");
+                SetLabelText("Chiusura in corso...");
             }
 
             webClientTimeout.Dispose();
@@ -112,7 +114,7 @@ namespace UpdaterManagerLibrary
                             ProcessStartInfo processStartInfo = new ProcessStartInfo
                             {
                                 FileName = fileName,
-                                Arguments = string.Format(UpdateUtilities.UpdaterArguments, processFileName, e.UserState),
+                                Arguments = string.Format(Utilities.UpdaterArguments, processFileName, e.UserState),
                                 CreateNoWindow = true,
                                 WindowStyle = ProcessWindowStyle.Hidden
                             };
@@ -166,7 +168,7 @@ namespace UpdaterManagerLibrary
 
             Application.DoEvents();
 
-            Thread.Sleep(1000);
+            Thread.Sleep(Utilities.DefaultSleepTime);
         }
         #endregion
     }
