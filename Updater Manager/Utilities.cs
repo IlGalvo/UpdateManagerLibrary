@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace UpdaterManager
 {
@@ -17,14 +18,15 @@ namespace UpdaterManager
         #region FINALIZER
         public static string FinalizerName { get { return ("Finalizer.bat"); } }
 
+        // Environment.GetCommandLineArgs()[0]
         public static string FinalizerContent
         {
             get
             {
                 return ("@echo off\n" +
                         "timeout /t 1 /nobreak > nul\n" +
-                        "del \"" + AppDomain.CurrentDomain.FriendlyName + "\"\n" +
-                        @"start """" ""{0}""" + "\n" +
+                        "del \"" + Path.Combine(Path.GetTempPath(), AppDomain.CurrentDomain.FriendlyName) + "\"\n" +
+                        "start \"\" \"{0}\"" + "\n" +
                         "del /a:h \"" + FinalizerName + "\"");
             }
         }

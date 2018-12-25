@@ -116,7 +116,7 @@
             this.Text = "DownloadForm";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DownloadForm_FormClosing);
-            this.Load += new System.EventHandler(this.DownloadForm_Load);
+            this.Shown += new System.EventHandler(this.DownloadForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

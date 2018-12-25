@@ -30,15 +30,16 @@ namespace UpdaterManagerLibrary
             this.remoteSha256 = remoteSha256;
         }
 
-        private void DownloadForm_Load(object sender, EventArgs e)
+        private void DownloadForm_Shown(object sender, EventArgs e)
         {
             string fileNamePath = string.Empty;
 
             try
             {
-                labelInformation.Text = "Sto scaricando l'aggiornamento...";
+                SetLabelText("Preparazione al download dell'aggiornamento.");
 
-                string tmpFileNamePath = Path.GetTempFileName();
+                fileNamePath = Path.GetTempFileName();
+                string tmpFileNamePath = fileNamePath;
                 fileNamePath = Path.ChangeExtension(tmpFileNamePath, ".zip");
 
                 File.Move(tmpFileNamePath, fileNamePath);
@@ -47,10 +48,12 @@ namespace UpdaterManagerLibrary
                 webClientTimeout.DownloadFileCompleted += WebClientTimeout_DownloadFileCompleted;
 
                 webClientTimeout.DownloadFileAsync(new Uri(downloadUrl), fileNamePath, fileNamePath);
+
+                SetLabelText("Download dell'aggiornamento in corso...");
             }
             catch (Exception exception)
             {
-                ManageResultOperations(fileNamePath, "Errore generico.", exception.Message);
+                ManageResultOperations(fileNamePath, "Errore durante la preparazione del download.", exception.Message);
             }
         }
 
@@ -59,6 +62,9 @@ namespace UpdaterManagerLibrary
             if (webClientTimeout.IsBusy)
             {
                 webClientTimeout.CancelAsync();
+
+                SetLabelText("Download interrotto.");
+                SetLabelText("Download interrotto.");
             }
 
             webClientTimeout.Dispose();
@@ -79,7 +85,7 @@ namespace UpdaterManagerLibrary
         {
             if (e.Cancelled)
             {
-                ManageResultOperations(e.UserState.ToString(), "Download interrotto.", string.Empty);
+                ManageResultOperations(e.UserState.ToString(), "Chiusura in corso...", string.Empty);
             }
             else if (e.Error != null)
             {
@@ -96,7 +102,7 @@ namespace UpdaterManagerLibrary
 
                         if (localSha256 == remoteSha256)
                         {
-                            ManageResultOperations(string.Empty, "Scaricamento completato. Avvio installazione.", string.Empty);
+                            SetLabelText("Download completato e verificato con successo.");
 
                             string fileName = Path.Combine(Path.GetTempPath(), (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe"));
                             File.WriteAllBytes(fileName, Resources.Updater_Manager);
@@ -111,6 +117,8 @@ namespace UpdaterManagerLibrary
                                 WindowStyle = ProcessWindowStyle.Hidden
                             };
 
+                            SetLabelText("Avvio dell'installazione in corso...");
+
                             Process.Start(processStartInfo).Dispose();
 
                             DialogResult = DialogResult.OK;
@@ -118,13 +126,15 @@ namespace UpdaterManagerLibrary
                         }
                         else
                         {
-                            ManageResultOperations(e.UserState.ToString(), "File danneggiato.", "File danneggiato.");
+                            ManageResultOperations(e.UserState.ToString(), "Il file scaricato è danneggiato.", string.Empty);
+
+                            SetLabelText("Chiusura in corso...");
                         }
                     }
                 }
                 catch (Exception exception)
                 {
-                    ManageResultOperations(e.UserState.ToString(), "Errore generico.", exception.Message);
+                    ManageResultOperations(e.UserState.ToString(), "Errore durante l'avvio dell'installazione.", exception.Message);
                 }
             }
         }
@@ -136,21 +146,27 @@ namespace UpdaterManagerLibrary
                 File.Delete(fileToDelete);
             }
 
-            labelInformation.Text = informationText;
-
-            Application.DoEvents();
-            Thread.Sleep(1000);
+            SetLabelText(informationText);
 
             if (!string.IsNullOrEmpty(exceptionMessage))
             {
-                MessageBox.Show(exceptionMessage, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, exceptionMessage, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                SetLabelText("Chiusura in corso...");
 
                 Close();
             }
-            /*else
-            {
-                Thread.Sleep(1000);
-            }*/
+        }
+        #endregion
+
+        #region LABEL_STATUS
+        private void SetLabelText(string informationText)
+        {
+            labelInformation.Text = informationText;
+
+            Application.DoEvents();
+
+            Thread.Sleep(1000);
         }
         #endregion
     }

@@ -59,7 +59,6 @@ namespace UpdaterManager
                             }
                         }
 
-                        // Forse meglio nel finally
                         File.WriteAllText(Utilities.FinalizerName, string.Format(Utilities.FinalizerContent, args[1]));
                         File.SetAttributes(Utilities.FinalizerName, FileAttributes.Hidden);
 
@@ -69,7 +68,6 @@ namespace UpdaterManager
                         processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
                         Process.Start(processStartInfo).Dispose();
-                        // Forse meglio nel finally
                     }
                     catch (Exception exception)
                     {
