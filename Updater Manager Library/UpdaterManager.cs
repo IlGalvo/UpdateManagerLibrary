@@ -23,6 +23,16 @@ namespace UpdaterManagerLibrary
 
                     if (currentVersion < Version.Parse(versioning.LatestVersion))
                     {
+                        if (!Application.MessageLoop)
+                        {
+                            Application.EnableVisualStyles();
+
+                            if (Application.OpenForms.Count == 0)
+                            {
+                                Application.SetCompatibleTextRenderingDefault(false);
+                            }
+                        }
+
                         using (UpdateForm updateForm = new UpdateForm(versioning.VersionHistory))
                         {
                             if (updateForm.ShowDialog() == DialogResult.OK)

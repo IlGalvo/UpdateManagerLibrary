@@ -3,7 +3,7 @@
     internal static class Utilities
     {
         #region GENERAL
-        public static int DefaultSleepTime { get { return 1000; } }
+        public static int DefaultSleepTime { get { return 1500; } }
 
         public static string UpdaterArguments { get { return ("/update \"{0}\" \"{1}\""); } }
         #endregion

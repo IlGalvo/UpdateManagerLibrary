@@ -14,6 +14,7 @@ namespace UpdaterManagerLibrary
     {
         #region GLOBAL_VARIABLE
         private WebClientTimeout webClientTimeout;
+        private string fileNamePath;
 
         private string downloadUrl;
         private string remoteSha256;
@@ -25,6 +26,7 @@ namespace UpdaterManagerLibrary
             InitializeComponent();
 
             webClientTimeout = new WebClientTimeout();
+            fileNamePath = string.Empty;
 
             this.downloadUrl = downloadUrl;
             this.remoteSha256 = remoteSha256;
@@ -34,13 +36,12 @@ namespace UpdaterManagerLibrary
 
         private void DownloadForm_Shown(object sender, EventArgs e)
         {
-            string fileNamePath = string.Empty;
+            SetLabelText("Preparazione al download dell'aggiornamento.");
 
             try
             {
-                SetLabelText("Preparazione al download dell'aggiornamento.");
-
                 fileNamePath = Path.GetTempFileName();
+
                 string tmpFileNamePath = fileNamePath;
                 fileNamePath = Path.ChangeExtension(tmpFileNamePath, ".zip");
 
@@ -49,13 +50,13 @@ namespace UpdaterManagerLibrary
                 webClientTimeout.DownloadProgressChanged += WebClientTimeout_DownloadProgressChanged;
                 webClientTimeout.DownloadFileCompleted += WebClientTimeout_DownloadFileCompleted;
 
-                webClientTimeout.DownloadFileAsync(new Uri(downloadUrl), fileNamePath, fileNamePath);
+                webClientTimeout.DownloadFileAsync(new Uri(downloadUrl), fileNamePath);
 
                 SetLabelText("Download dell'aggiornamento in corso...");
             }
             catch (Exception exception)
             {
-                ManageResultOperations(fileNamePath, "Errore durante la preparazione del download.", exception.Message);
+                ManageResultOperations("Errore durante la preparazione del download.", exception.Message);
             }
         }
 
@@ -65,8 +66,7 @@ namespace UpdaterManagerLibrary
             {
                 webClientTimeout.CancelAsync();
 
-                SetLabelText("Download interrotto.");
-                SetLabelText("Chiusura in corso...");
+                ManageResultOperations("Download interrotto.", string.Empty);
             }
 
             webClientTimeout.Dispose();
@@ -85,13 +85,12 @@ namespace UpdaterManagerLibrary
 
         private void WebClientTimeout_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            if (e.Cancelled)
+            if (e.Error != null)
             {
-                ManageResultOperations(e.UserState.ToString(), "Chiusura in corso...", string.Empty);
-            }
-            else if (e.Error != null)
-            {
-                ManageResultOperations(e.UserState.ToString(), "Errore durante il download.", e.Error.Message);
+                if (!e.Cancelled)
+                {
+                    ManageResultOperations("Errore durante il download.", e.Error.Message);
+                }
             }
             else
             {
@@ -99,7 +98,7 @@ namespace UpdaterManagerLibrary
                 {
                     using (SHA256 sha256 = SHA256.Create())
                     {
-                        byte[] downloadedFile = File.ReadAllBytes(e.UserState.ToString());
+                        byte[] downloadedFile = File.ReadAllBytes(fileNamePath);
                         string localSha256 = BitConverter.ToString(sha256.ComputeHash(downloadedFile)).Replace("-", string.Empty);
 
                         if (localSha256 == remoteSha256)
@@ -114,7 +113,7 @@ namespace UpdaterManagerLibrary
                             ProcessStartInfo processStartInfo = new ProcessStartInfo
                             {
                                 FileName = fileName,
-                                Arguments = string.Format(Utilities.UpdaterArguments, processFileName, e.UserState),
+                                Arguments = string.Format(Utilities.UpdaterArguments, processFileName, fileNamePath),
                                 CreateNoWindow = true,
                                 WindowStyle = ProcessWindowStyle.Hidden
                             };
@@ -128,24 +127,24 @@ namespace UpdaterManagerLibrary
                         }
                         else
                         {
-                            ManageResultOperations(e.UserState.ToString(), "Il file scaricato è danneggiato.", string.Empty);
-
-                            SetLabelText("Chiusura in corso...");
+                            throw (new Exception("Il file scaricato è danneggiato."));
                         }
                     }
                 }
                 catch (Exception exception)
                 {
-                    ManageResultOperations(e.UserState.ToString(), "Errore durante l'avvio dell'installazione.", exception.Message);
+                    ManageResultOperations("Errore durante l'avvio dell'installazione.", exception.Message);
                 }
             }
         }
+        #endregion
 
-        private void ManageResultOperations(string fileToDelete, string informationText, string exceptionMessage)
+        #region RESULT_MANAGER
+        private void ManageResultOperations(string informationText, string exceptionMessage)
         {
-            if (File.Exists(fileToDelete))
+            if (File.Exists(fileNamePath))
             {
-                File.Delete(fileToDelete);
+                File.Delete(fileNamePath);
             }
 
             SetLabelText(informationText);
@@ -154,10 +153,10 @@ namespace UpdaterManagerLibrary
             {
                 MessageBox.Show(this, exceptionMessage, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                SetLabelText("Chiusura in corso...");
-
                 Close();
             }
+
+            SetLabelText("Chiusura in corso...");
         }
         #endregion
 
