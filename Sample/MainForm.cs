@@ -15,7 +15,7 @@ namespace Sample
         {
             string downloadUrl = "https://onedrive.live.com/download?resid=7D7FF9DFDA23C644!1341&authkey=!AAPfdJrVo5UeVkE";
 
-            if (UpdaterManager.CheckForUpdates(new Version(Application.ProductVersion), downloadUrl, false))
+            if (UpdaterManager.CheckForUpdates(new Version(Application.ProductVersion), downloadUrl, true))
             {
                 Close();
             }

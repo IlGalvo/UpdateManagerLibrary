@@ -21,27 +21,13 @@ namespace UpdaterManager
 
             using (Mutex mutex = new Mutex(false, (Application.ProductName + "_" + Assembly.GetExecutingAssembly().GetType().GUID.ToString())))
             {
-                if ((mutex.WaitOne(0, false)) &&
-                    (args.Length == Utilities.ParametersNumber) &&
-                    (args[0] == Utilities.UpdateAction) &&
-                    (!string.IsNullOrEmpty(args[1])) &&
-                    (File.Exists(args[2])))
+                if ((mutex.WaitOne(0, false)) && (ValidateArguments(args)))
                 {
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo(Utilities.FinalizerName);
+
                     try
                     {
-                        foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(args[1])))
-                        {
-                            using (process)
-                            {
-                                if ((!process.WaitForExit(Utilities.MaxWaitTime)))
-                                {
-                                    if (!process.CloseMainWindow())
-                                    {
-                                        process.Kill();
-                                    }
-                                }
-                            }
-                        }
+                        ClosePendingProcesses(args[1]);
 
                         using (ZipArchive zipArchive = ZipFile.OpenRead(args[2]))
                         {
@@ -62,23 +48,68 @@ namespace UpdaterManager
                         File.WriteAllText(Utilities.FinalizerName, string.Format(Utilities.FinalizerContent, args[1]));
                         File.SetAttributes(Utilities.FinalizerName, FileAttributes.Hidden);
 
-                        ProcessStartInfo processStartInfo = new ProcessStartInfo();
-                        processStartInfo.FileName = Utilities.FinalizerName;
                         processStartInfo.CreateNoWindow = true;
                         processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-                        Process.Start(processStartInfo).Dispose();
                     }
                     catch (Exception exception)
                     {
-                        MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(exception.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        processStartInfo.FileName = args[1];
                     }
                     finally
                     {
                         File.Delete(args[2]);
+
+                        Process.Start(processStartInfo).Dispose();
                     }
                 }
             }
         }
+
+        #region ARGUMENTS_VALIDATION
+        private static bool ValidateArguments(string[] args)
+        {
+            return ((args.Length == Utilities.ParametersNumber) &&
+                (args[0] == Utilities.UpdateAction) &&
+                (File.Exists(args[1])) &&
+                (File.Exists(args[2])));
+        }
+        #endregion
+
+        #region PROCESSES_MANAGER
+        private static void ClosePendingProcesses(string processFilePath)
+        {
+            string mainFileVersionInfo = RemoveFirstRowValue(FileVersionInfo.GetVersionInfo(processFilePath).ToString());
+
+            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(processFilePath)))
+            {
+                using (process)
+                {
+                    string fileVersionInfo = RemoveFirstRowValue(process.MainModule.FileVersionInfo.ToString());
+
+                    if (mainFileVersionInfo == fileVersionInfo)
+                    {
+                        if (!process.WaitForExit(Utilities.MaxWaitTime))
+                        {
+                            if (!process.CloseMainWindow())
+                            {
+                                process.Kill();
+                            }
+                            else if (!process.WaitForExit(Utilities.MaxWaitTime))
+                            {
+                                process.Kill();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static string RemoveFirstRowValue(string fullText)
+        {
+            return fullText.Remove(fullText.IndexOf("F"), fullText.IndexOf(Environment.NewLine)).Trim();
+        }
+        #endregion
     }
 }

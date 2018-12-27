@@ -14,7 +14,7 @@ namespace UpdaterManagerLibrary
     {
         #region GLOBAL_VARIABLE
         private WebClientTimeout webClientTimeout;
-        private string fileNamePath;
+        private string downloadFilePath;
 
         private string downloadUrl;
         private string remoteSha256;
@@ -26,7 +26,7 @@ namespace UpdaterManagerLibrary
             InitializeComponent();
 
             webClientTimeout = new WebClientTimeout();
-            fileNamePath = string.Empty;
+            downloadFilePath = string.Empty;
 
             this.downloadUrl = downloadUrl;
             this.remoteSha256 = remoteSha256;
@@ -40,17 +40,17 @@ namespace UpdaterManagerLibrary
 
             try
             {
-                fileNamePath = Path.GetTempFileName();
+                downloadFilePath = Path.GetTempFileName();
 
-                string tmpFileNamePath = fileNamePath;
-                fileNamePath = Path.ChangeExtension(tmpFileNamePath, ".zip");
+                string tmpDownloadFilePath = downloadFilePath;
+                downloadFilePath = Path.ChangeExtension(tmpDownloadFilePath, ".zip");
 
-                File.Move(tmpFileNamePath, fileNamePath);
+                File.Move(tmpDownloadFilePath, downloadFilePath);
 
                 webClientTimeout.DownloadProgressChanged += WebClientTimeout_DownloadProgressChanged;
                 webClientTimeout.DownloadFileCompleted += WebClientTimeout_DownloadFileCompleted;
 
-                webClientTimeout.DownloadFileAsync(new Uri(downloadUrl), fileNamePath);
+                webClientTimeout.DownloadFileAsync(new Uri(downloadUrl), downloadFilePath);
 
                 SetLabelText("Download dell'aggiornamento in corso...");
             }
@@ -66,7 +66,7 @@ namespace UpdaterManagerLibrary
             {
                 webClientTimeout.CancelAsync();
 
-                ManageResultOperations("Download interrotto.", string.Empty);
+                ManageResultOperations("Download interrotto.");
             }
 
             webClientTimeout.Dispose();
@@ -98,22 +98,22 @@ namespace UpdaterManagerLibrary
                 {
                     using (SHA256 sha256 = SHA256.Create())
                     {
-                        byte[] downloadedFile = File.ReadAllBytes(fileNamePath);
+                        byte[] downloadedFile = File.ReadAllBytes(downloadFilePath);
                         string localSha256 = BitConverter.ToString(sha256.ComputeHash(downloadedFile)).Replace("-", string.Empty);
 
                         if (localSha256 == remoteSha256)
                         {
                             SetLabelText("Download completato e verificato con successo.");
 
-                            string fileName = Path.Combine(Path.GetTempPath(), (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe"));
-                            File.WriteAllBytes(fileName, Resources.Updater_Manager);
+                            string updaterFilePath = Path.Combine(Path.GetTempPath(), (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe"));
+                            File.WriteAllBytes(updaterFilePath, Resources.Updater_Manager);
 
-                            string processFileName = Process.GetCurrentProcess().MainModule.FileName;
+                            string processFilePath = Process.GetCurrentProcess().MainModule.FileName;
 
                             ProcessStartInfo processStartInfo = new ProcessStartInfo
                             {
-                                FileName = fileName,
-                                Arguments = string.Format(Utilities.UpdaterArguments, processFileName, fileNamePath),
+                                FileName = updaterFilePath,
+                                Arguments = string.Format(Utilities.UpdaterArguments, processFilePath, downloadFilePath),
                                 CreateNoWindow = true,
                                 WindowStyle = ProcessWindowStyle.Hidden
                             };
@@ -140,11 +140,11 @@ namespace UpdaterManagerLibrary
         #endregion
 
         #region RESULT_MANAGER
-        private void ManageResultOperations(string informationText, string exceptionMessage)
+        private void ManageResultOperations(string informationText, string exceptionMessage = null)
         {
-            if (File.Exists(fileNamePath))
+            if (File.Exists(downloadFilePath))
             {
-                File.Delete(fileNamePath);
+                File.Delete(downloadFilePath);
             }
 
             SetLabelText(informationText);

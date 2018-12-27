@@ -8,7 +8,7 @@ namespace UpdaterManagerLibrary
 {
     public static class UpdaterManager
     {
-        public static bool CheckForUpdates(Version currentVersion, string updateInformationUrl, bool verboseNotifier)
+        public static bool CheckForUpdates(Version currentVersion, string updateInformationUrl, bool verboseNotifier = false)
         {
             bool operationSuccess = false;
 
