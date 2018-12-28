@@ -31,7 +31,7 @@ namespace UpdaterManagerLibrary
             this.downloadUrl = downloadUrl;
             this.remoteSha256 = remoteSha256;
 
-            Thread.Sleep(((int)(Utilities.DefaultSleepTime / 2.8)));
+            Thread.Sleep(Utilities.ShortSleepTime);
         }
 
         private void DownloadForm_Shown(object sender, EventArgs e)
@@ -43,7 +43,7 @@ namespace UpdaterManagerLibrary
                 downloadFilePath = Path.GetTempFileName();
 
                 string tmpDownloadFilePath = downloadFilePath;
-                downloadFilePath = Path.ChangeExtension(tmpDownloadFilePath, ".zip");
+                downloadFilePath = Path.ChangeExtension(tmpDownloadFilePath, Utilities.ZipExtension);
 
                 File.Move(tmpDownloadFilePath, downloadFilePath);
 
@@ -94,6 +94,8 @@ namespace UpdaterManagerLibrary
             }
             else
             {
+                string updaterFilePath = string.Empty;
+
                 try
                 {
                     using (SHA256 sha256 = SHA256.Create())
@@ -105,15 +107,13 @@ namespace UpdaterManagerLibrary
                         {
                             SetLabelText("Download completato e verificato con successo.");
 
-                            string updaterFilePath = Path.Combine(Path.GetTempPath(), (nameof(Resources.Updater_Manager).Replace("_", " ") + ".exe"));
+                            updaterFilePath = Path.Combine(Path.GetTempPath(), Utilities.UpdaterName);
                             File.WriteAllBytes(updaterFilePath, Resources.Updater_Manager);
-
-                            string processFilePath = Process.GetCurrentProcess().MainModule.FileName;
 
                             ProcessStartInfo processStartInfo = new ProcessStartInfo
                             {
                                 FileName = updaterFilePath,
-                                Arguments = string.Format(Utilities.UpdaterArguments, processFilePath, downloadFilePath),
+                                Arguments = string.Format(Utilities.UpdaterArguments, downloadFilePath),
                                 CreateNoWindow = true,
                                 WindowStyle = ProcessWindowStyle.Hidden
                             };
@@ -134,18 +134,28 @@ namespace UpdaterManagerLibrary
                 catch (Exception exception)
                 {
                     ManageResultOperations("Errore durante l'avvio dell'installazione.", exception.Message);
+
+                    DeleteFile(updaterFilePath);
                 }
             }
+        }
+        #endregion
+
+        #region LABEL_STATUS
+        private void SetLabelText(string informationText)
+        {
+            labelInformation.Text = informationText;
+
+            Application.DoEvents();
+
+            Thread.Sleep(Utilities.DefaultSleepTime);
         }
         #endregion
 
         #region RESULT_MANAGER
         private void ManageResultOperations(string informationText, string exceptionMessage = null)
         {
-            if (File.Exists(downloadFilePath))
-            {
-                File.Delete(downloadFilePath);
-            }
+            DeleteFile(downloadFilePath);
 
             SetLabelText(informationText);
 
@@ -160,14 +170,13 @@ namespace UpdaterManagerLibrary
         }
         #endregion
 
-        #region LABEL_STATUS
-        private void SetLabelText(string informationText)
+        #region DELETE_FILE
+        private void DeleteFile(string filePath)
         {
-            labelInformation.Text = informationText;
-
-            Application.DoEvents();
-
-            Thread.Sleep(Utilities.DefaultSleepTime);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
         }
         #endregion
     }

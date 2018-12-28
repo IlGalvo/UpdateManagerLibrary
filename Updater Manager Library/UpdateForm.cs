@@ -19,7 +19,9 @@ namespace UpdaterManagerLibrary
 
         private void UpdateForm_Load(object sender, EventArgs e)
         {
-            richTextBoxChangelog.Rtf = ("{\\rtf1\\ansi " + versionHistory.Replace("\n", "\\line").Replace("\t", "      ") + "}");
+            richTextBoxChangelog.Text = versionHistory;
+
+            richTextBoxChangelog.Rtf = richTextBoxChangelog.Rtf.Replace(@"\\", @"\").Replace(@"\tab", "    ");
         }
         #endregion
 
