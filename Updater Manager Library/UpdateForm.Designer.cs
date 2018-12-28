@@ -35,8 +35,9 @@
             // 
             // labelTitle
             // 
+            this.labelTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(65)))), ((int)(((byte)(90)))));
             this.labelTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.labelTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 23.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTitle.ForeColor = System.Drawing.Color.White;
             this.labelTitle.Location = new System.Drawing.Point(0, 0);
             this.labelTitle.Name = "labelTitle";
@@ -50,12 +51,12 @@
             this.richTextBoxChangelog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBoxChangelog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(76)))), ((int)(((byte)(103)))));
+            this.richTextBoxChangelog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(76)))), ((int)(((byte)(105)))));
             this.richTextBoxChangelog.ForeColor = System.Drawing.Color.White;
-            this.richTextBoxChangelog.Location = new System.Drawing.Point(12, 51);
+            this.richTextBoxChangelog.Location = new System.Drawing.Point(12, 56);
             this.richTextBoxChangelog.Name = "richTextBoxChangelog";
             this.richTextBoxChangelog.ReadOnly = true;
-            this.richTextBoxChangelog.Size = new System.Drawing.Size(430, 334);
+            this.richTextBoxChangelog.Size = new System.Drawing.Size(430, 329);
             this.richTextBoxChangelog.TabIndex = 1;
             this.richTextBoxChangelog.Text = "";
             // 
@@ -93,7 +94,7 @@
             this.Name = "UpdateForm";
             this.Opacity = 0.99D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "UpdateForm";
+            this.Text = "Update Manager";
             this.Load += new System.EventHandler(this.UpdateForm_Load);
             this.ResumeLayout(false);
 
