@@ -10,7 +10,7 @@ namespace UpdaterManagerLibrary
     public sealed class Versioning
     {
         #region GLOBAL_VARIABLES
-        internal AssemblyName ExecutingAssemblyName { get; set; }
+        internal AssemblyName MainAssemblyName { get; set; }
 
         public string LatestVersion { get; set; }
         public string DownloadUrl { get; set; }
@@ -21,7 +21,7 @@ namespace UpdaterManagerLibrary
         #region CONSTRUCTOR
         public Versioning()
         {
-            ExecutingAssemblyName = new AssemblyName();
+            MainAssemblyName = new AssemblyName();
 
             LatestVersion = string.Empty;
             DownloadUrl = string.Empty;

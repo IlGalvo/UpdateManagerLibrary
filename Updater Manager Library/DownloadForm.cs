@@ -35,7 +35,7 @@ namespace UpdaterManagerLibrary
 
         private void DownloadForm_Load(object sender, EventArgs e)
         {
-            Text = versioning.ExecutingAssemblyName.Name;
+            Text = versioning.MainAssemblyName.Name;
         }
 
         private void DownloadForm_Shown(object sender, EventArgs e)

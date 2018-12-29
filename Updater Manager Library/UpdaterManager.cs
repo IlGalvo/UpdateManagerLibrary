@@ -10,7 +10,7 @@ namespace UpdaterManagerLibrary
     public static class UpdaterManager
     {
         #region CHECK_UPDATES
-        public static bool CheckForUpdates(string updateInformationUrl, Assembly executingAssembly = null, bool verboseNotifier = false)
+        public static bool CheckForUpdates(string updateCheckUrl, Assembly mainAssembly = null, bool verboseNotifier = false)
         {
             bool operationSuccess = false;
 
@@ -19,18 +19,18 @@ namespace UpdaterManagerLibrary
                 int connectionTimeout = ((!verboseNotifier) ? Utilities.DefaultTimeout : Utilities.LongTimeout);
 
                 using (WebClientTimeout webClientTimeout = new WebClientTimeout(connectionTimeout))
-                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(updateInformationUrl))))
+                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(updateCheckUrl))))
                 {
                     Versioning versioning = ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
 
-                    if (executingAssembly == null)
+                    if (mainAssembly == null)
                     {
-                        executingAssembly = Assembly.GetExecutingAssembly();
+                        mainAssembly = Assembly.GetEntryAssembly();
                     }
 
-                    versioning.ExecutingAssemblyName = executingAssembly.GetName();
+                    versioning.MainAssemblyName = mainAssembly.GetName();
 
-                    if (versioning.ExecutingAssemblyName.Version < Version.Parse(versioning.LatestVersion))
+                    if (versioning.MainAssemblyName.Version < Version.Parse(versioning.LatestVersion))
                     {
                         ManageVisualStyles();
 
@@ -38,7 +38,7 @@ namespace UpdaterManagerLibrary
                         {
                             if (updateForm.ShowDialog() == DialogResult.OK)
                             {
-                                using (DownloadForm downloadForm = new DownloadForm(versioning, executingAssembly.Location))
+                                using (DownloadForm downloadForm = new DownloadForm(versioning, mainAssembly.Location))
                                 {
                                     if (downloadForm.ShowDialog() == DialogResult.OK)
                                     {
