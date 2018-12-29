@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -19,11 +18,11 @@ namespace UpdaterManager
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            using (Mutex mutex = new Mutex(false, (Application.ProductName + "_" + Assembly.GetExecutingAssembly().GetType().GUID.ToString())))
+            using (Mutex mutex = new Mutex(false, (Application.ProductName + "_" + Utilities.ApplicationGUID)))
             {
                 if ((mutex.WaitOne(0, false)) && (ValidateArguments(args)))
                 {
-                    ProcessStartInfo processStartInfo = new ProcessStartInfo(Utilities.FinalizerName);
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo(Utilities.FinalizerPath);
 
                     try
                     {
@@ -36,7 +35,7 @@ namespace UpdaterManager
                                 string completeFileName = Path.Combine(Environment.CurrentDirectory, zipArchiveEntry.FullName);
                                 string directoryName = Path.GetDirectoryName(completeFileName);
 
-                                if ((directoryName != Environment.CurrentDirectory) && (!Directory.Exists(directoryName)))
+                                if (!Directory.Exists(directoryName))
                                 {
                                     Directory.CreateDirectory(directoryName);
                                 }
@@ -45,8 +44,8 @@ namespace UpdaterManager
                             }
                         }
 
-                        File.WriteAllText(Utilities.FinalizerName, string.Format(Utilities.FinalizerContent, args[1]));
-                        File.SetAttributes(Utilities.FinalizerName, FileAttributes.Hidden);
+                        File.WriteAllText(Utilities.FinalizerPath, string.Format(Utilities.FinalizerContent, args[1]));
+                        File.SetAttributes(Utilities.FinalizerPath, FileAttributes.Hidden);
 
                         processStartInfo.CreateNoWindow = true;
                         processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -70,8 +69,8 @@ namespace UpdaterManager
         #region ARGUMENTS_VALIDATION
         private static bool ValidateArguments(string[] args)
         {
-            return ((args.Length == Utilities.ParametersNumber) &&
-                (args[0] == Utilities.UpdateAction) &&
+            return ((args.Length == Utilities.UpdateParametersNumber) &&
+                (args[0] == Utilities.UpdateParameterAction) &&
                 (File.Exists(args[1])) &&
                 (File.Exists(args[2])));
         }

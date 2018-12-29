@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
@@ -8,7 +9,8 @@ namespace UpdaterManagerLibrary
 {
     public static class UpdaterManager
     {
-        public static bool CheckForUpdates(Version currentVersion, string updateInformationUrl, bool verboseNotifier = false)
+        #region CHECK_UPDATES
+        public static bool CheckForUpdates(string updateInformationUrl, Assembly executingAssembly = null, bool verboseNotifier = false)
         {
             bool operationSuccess = false;
 
@@ -21,25 +23,20 @@ namespace UpdaterManagerLibrary
                 {
                     Versioning versioning = ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
 
-                    if (currentVersion < Version.Parse(versioning.LatestVersion))
+                    if (executingAssembly != null)
                     {
-                        if (!Application.MessageLoop)
-                        {
-                            Application.EnableVisualStyles();
+                        versioning.ExecutingAssemblyName = executingAssembly.GetName();
+                    }
 
-                            if (Application.OpenForms.Count == 0)
-                            {
-                                Application.SetCompatibleTextRenderingDefault(false);
-                            }
-                        }
+                    ManageVisualStyles();
 
-                        versioning.CurrentVersion = currentVersion.ToString();
-
+                    if (versioning.ExecutingAssemblyName.Version < Version.Parse(versioning.LatestVersion))
+                    {
                         using (UpdateForm updateForm = new UpdateForm(versioning))
                         {
                             if (updateForm.ShowDialog() == DialogResult.OK)
                             {
-                                using (DownloadForm downloadForm = new DownloadForm(versioning.DownloadUrl, versioning.Sha256))
+                                using (DownloadForm downloadForm = new DownloadForm(versioning, executingAssembly.Location))
                                 {
                                     if (downloadForm.ShowDialog() == DialogResult.OK)
                                     {
@@ -65,5 +62,21 @@ namespace UpdaterManagerLibrary
 
             return operationSuccess;
         }
+        #endregion
+
+        #region VISUALSTYLES_MANAGER
+        private static void ManageVisualStyles()
+        {
+            if (!Application.MessageLoop)
+            {
+                Application.EnableVisualStyles();
+
+                if (Application.OpenForms.Count == 0)
+                {
+                    Application.SetCompatibleTextRenderingDefault(false);
+                }
+            }
+        }
+        #endregion
     }
 }

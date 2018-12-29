@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace UpdaterManagerLibrary
+﻿namespace UpdaterManagerLibrary
 {
     internal static class Utilities
     {
@@ -23,13 +21,7 @@ namespace UpdaterManagerLibrary
         #region UPDATER
         public static string UpdaterName { get { return ("Updater Manager.exe"); } }
 
-        public static string UpdaterArguments
-        {
-            get
-            {
-                return ("/update \"" + Process.GetCurrentProcess().MainModule.FileName + "\" \"{0}\"");
-            }
-        }
+        public static string UpdaterArguments { get { return ("/update \"{0}\" \"{1}\""); } }
         #endregion
     }
 }

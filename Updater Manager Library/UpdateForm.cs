@@ -19,7 +19,12 @@ namespace UpdaterManagerLibrary
 
         private void UpdateForm_Load(object sender, EventArgs e)
         {
-            labelCurrentVersion.Text += versioning.CurrentVersion;
+            Text = versioning.ExecutingAssemblyName.Name;
+        }
+
+        private void UpdateForm_Shown(object sender, EventArgs e)
+        {
+            labelCurrentVersion.Text += versioning.ExecutingAssemblyName.Version;
             labelLastVersion.Text += versioning.LatestVersion;
 
             richTextBoxChangelog.Text = versioning.VersionHistory;

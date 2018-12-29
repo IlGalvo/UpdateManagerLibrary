@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms;
 using UpdaterManagerLibrary.Properties;
@@ -16,22 +15,27 @@ namespace UpdaterManagerLibrary
         private WebClientTimeout webClientTimeout;
         private string downloadFilePath;
 
-        private string downloadUrl;
-        private string remoteSha256;
+        private Versioning versioning;
+        private string executingFilePath;
         #endregion
 
         #region FORM_EVENTS
-        public DownloadForm(string downloadUrl, string remoteSha256)
+        public DownloadForm(Versioning versioning, string executingFilePath)
         {
             InitializeComponent();
 
             webClientTimeout = new WebClientTimeout();
             downloadFilePath = string.Empty;
 
-            this.downloadUrl = downloadUrl;
-            this.remoteSha256 = remoteSha256;
+            this.versioning = versioning;
+            this.executingFilePath = executingFilePath;
 
             Thread.Sleep(Utilities.ShortSleepTime);
+        }
+
+        private void DownloadForm_Load(object sender, EventArgs e)
+        {
+            Text = versioning.ExecutingAssemblyName.Name;
         }
 
         private void DownloadForm_Shown(object sender, EventArgs e)
@@ -50,7 +54,7 @@ namespace UpdaterManagerLibrary
                 webClientTimeout.DownloadProgressChanged += WebClientTimeout_DownloadProgressChanged;
                 webClientTimeout.DownloadFileCompleted += WebClientTimeout_DownloadFileCompleted;
 
-                webClientTimeout.DownloadFileAsync(new Uri(downloadUrl), downloadFilePath);
+                webClientTimeout.DownloadFileAsync(new Uri(versioning.DownloadUrl), downloadFilePath);
 
                 SetLabelText("Download dell'aggiornamento in corso...");
             }
@@ -98,37 +102,31 @@ namespace UpdaterManagerLibrary
 
                 try
                 {
-                    using (SHA256 sha256 = SHA256.Create())
+                    if (Versioning.ComputeSha256(File.ReadAllBytes(downloadFilePath)) == versioning.Sha256)
                     {
-                        byte[] downloadedFile = File.ReadAllBytes(downloadFilePath);
-                        string localSha256 = BitConverter.ToString(sha256.ComputeHash(downloadedFile)).Replace("-", string.Empty);
+                        SetLabelText("Download completato e verificato con successo.");
 
-                        if (localSha256 == remoteSha256)
+                        updaterFilePath = Path.Combine(Path.GetTempPath(), Utilities.UpdaterName);
+                        File.WriteAllBytes(updaterFilePath, Resources.Updater_Manager);
+
+                        ProcessStartInfo processStartInfo = new ProcessStartInfo
                         {
-                            SetLabelText("Download completato e verificato con successo.");
+                            FileName = updaterFilePath,
+                            Arguments = string.Format(Utilities.UpdaterArguments, executingFilePath, downloadFilePath),
+                            CreateNoWindow = true,
+                            WindowStyle = ProcessWindowStyle.Hidden
+                        };
 
-                            updaterFilePath = Path.Combine(Path.GetTempPath(), Utilities.UpdaterName);
-                            File.WriteAllBytes(updaterFilePath, Resources.Updater_Manager);
+                        SetLabelText("Avvio dell'installazione in corso...");
 
-                            ProcessStartInfo processStartInfo = new ProcessStartInfo
-                            {
-                                FileName = updaterFilePath,
-                                Arguments = string.Format(Utilities.UpdaterArguments, downloadFilePath),
-                                CreateNoWindow = true,
-                                WindowStyle = ProcessWindowStyle.Hidden
-                            };
+                        Process.Start(processStartInfo).Dispose();
 
-                            SetLabelText("Avvio dell'installazione in corso...");
-
-                            Process.Start(processStartInfo).Dispose();
-
-                            DialogResult = DialogResult.OK;
-                            Close();
-                        }
-                        else
-                        {
-                            throw (new Exception("Il file scaricato è danneggiato."));
-                        }
+                        DialogResult = DialogResult.OK;
+                        Close();
+                    }
+                    else
+                    {
+                        throw (new Exception("Il file scaricato è danneggiato."));
                     }
                 }
                 catch (Exception exception)

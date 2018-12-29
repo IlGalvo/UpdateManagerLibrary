@@ -1,22 +1,52 @@
-﻿namespace UpdaterManagerLibrary
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Xml.Serialization;
+
+namespace UpdaterManagerLibrary
 {
     public sealed class Versioning
     {
+        #region GLOBAL_VARIABLES
+        internal AssemblyName ExecutingAssemblyName { get; set; }
+
         public string LatestVersion { get; set; }
         public string DownloadUrl { get; set; }
         public string Sha256 { get; set; }
         public string VersionHistory { get; set; }
+        #endregion
 
-        internal string CurrentVersion { get; set; }
-
+        #region CONSTRUCTOR
         public Versioning()
         {
+            ExecutingAssemblyName = Assembly.GetExecutingAssembly().GetName();
+
             LatestVersion = string.Empty;
             DownloadUrl = string.Empty;
             Sha256 = string.Empty;
             VersionHistory = string.Empty;
-
-            CurrentVersion = string.Empty;
         }
+        #endregion
+
+        #region XML_SERIALIZER
+        public void SerializeToXml(string filePath)
+        {
+            using (StreamWriter streamWriter = new StreamWriter(filePath))
+            {
+                new XmlSerializer(typeof(Versioning)).Serialize(streamWriter, this);
+            }
+        }
+        #endregion
+
+        #region SHA256_GENERATOR
+        public static string ComputeSha256(byte[] dataBuffer)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                return BitConverter.ToString(sha256.ComputeHash(dataBuffer)).Replace("-", string.Empty);
+            }
+        }
+        #endregion
     }
 }

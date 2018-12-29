@@ -1,21 +1,24 @@
-﻿using System.Diagnostics;
+﻿using System.IO;
+using System.Reflection;
 
 namespace UpdaterManager
 {
     internal static class Utilities
     {
         #region GENERAL
-        public static int ParametersNumber { get { return 3; } }
+        public static string ApplicationGUID { get { return Assembly.GetExecutingAssembly().GetType().GUID.ToString(); } }
 
         public static int MaxWaitTime { get { return 2500; } }
         #endregion
 
         #region UPDATE
-        public static string UpdateAction { get { return ("/update"); } }
+        public static int UpdateParametersNumber { get { return 3; } }
+
+        public static string UpdateParameterAction { get { return ("/update"); } }
         #endregion
 
         #region FINALIZER
-        public static string FinalizerName { get { return ("Finalizer.bat"); } }
+        public static string FinalizerPath { get { return Path.Combine(Path.GetTempPath(), "Finalizer.bat"); } }
 
         public static string FinalizerContent
         {
@@ -23,9 +26,9 @@ namespace UpdaterManager
             {
                 return ("@echo off\n" +
                         "timeout /t 1 /nobreak > nul\n" +
-                        "del \"" + Process.GetCurrentProcess().MainModule.FileName + "\"\n" +
+                        "del \"" + Assembly.GetExecutingAssembly().Location + "\"\n" +
                         "start \"\" \"{0}\"" + "\n" +
-                        "del /a:h \"" + FinalizerName + "\"");
+                        "del /a:h \"" + FinalizerPath + "\"");
             }
         }
         #endregion

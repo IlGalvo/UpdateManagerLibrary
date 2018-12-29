@@ -145,6 +145,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Update Manager";
             this.Load += new System.EventHandler(this.UpdateForm_Load);
+            this.Shown += new System.EventHandler(this.UpdateForm_Shown);
             this.tableLayoutPanelVersions.ResumeLayout(false);
             this.tableLayoutPanelVersions.PerformLayout();
             this.ResumeLayout(false);
