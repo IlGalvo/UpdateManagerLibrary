@@ -23,15 +23,17 @@ namespace UpdaterManagerLibrary
                 {
                     Versioning versioning = ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
 
-                    if (executingAssembly != null)
+                    if (executingAssembly == null)
                     {
-                        versioning.ExecutingAssemblyName = executingAssembly.GetName();
+                        executingAssembly = Assembly.GetExecutingAssembly();
                     }
 
-                    ManageVisualStyles();
+                    versioning.ExecutingAssemblyName = executingAssembly.GetName();
 
                     if (versioning.ExecutingAssemblyName.Version < Version.Parse(versioning.LatestVersion))
                     {
+                        ManageVisualStyles();
+
                         using (UpdateForm updateForm = new UpdateForm(versioning))
                         {
                             if (updateForm.ShowDialog() == DialogResult.OK)

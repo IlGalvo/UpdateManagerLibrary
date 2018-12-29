@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -20,7 +21,7 @@ namespace UpdaterManagerLibrary
         #region CONSTRUCTOR
         public Versioning()
         {
-            ExecutingAssemblyName = Assembly.GetExecutingAssembly().GetName();
+            ExecutingAssemblyName = new AssemblyName();
 
             LatestVersion = string.Empty;
             DownloadUrl = string.Empty;
