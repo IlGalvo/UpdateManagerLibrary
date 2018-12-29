@@ -28,25 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelTitle = new System.Windows.Forms.Label();
+            this.labelTitleStatic = new System.Windows.Forms.Label();
             this.coloredProgressBarDownload = new CustomControlCollection.ColoredProgressBar();
             this.labelCurrentByte = new System.Windows.Forms.Label();
             this.labelTotalByte = new System.Windows.Forms.Label();
             this.labelInformation = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // labelTitle
+            // labelTitleStatic
             // 
-            this.labelTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(65)))), ((int)(((byte)(90)))));
-            this.labelTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.labelTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 24.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTitle.ForeColor = System.Drawing.Color.White;
-            this.labelTitle.Location = new System.Drawing.Point(0, 0);
-            this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(484, 45);
-            this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "Download nuova versione!";
-            this.labelTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.labelTitleStatic.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(65)))), ((int)(((byte)(90)))));
+            this.labelTitleStatic.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelTitleStatic.Font = new System.Drawing.Font("Segoe UI Semibold", 24.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTitleStatic.ForeColor = System.Drawing.Color.White;
+            this.labelTitleStatic.Location = new System.Drawing.Point(0, 0);
+            this.labelTitleStatic.Name = "labelTitleStatic";
+            this.labelTitleStatic.Size = new System.Drawing.Size(484, 47);
+            this.labelTitleStatic.TabIndex = 0;
+            this.labelTitleStatic.Text = "Download nuova versione!";
+            this.labelTitleStatic.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // coloredProgressBarDownload
             // 
@@ -104,7 +104,7 @@
             this.Controls.Add(this.labelTotalByte);
             this.Controls.Add(this.labelCurrentByte);
             this.Controls.Add(this.coloredProgressBarDownload);
-            this.Controls.Add(this.labelTitle);
+            this.Controls.Add(this.labelTitleStatic);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = global::UpdaterManagerLibrary.Properties.Resources.Icon;
@@ -127,7 +127,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label labelTitle;
+        private System.Windows.Forms.Label labelTitleStatic;
         private CustomControlCollection.ColoredProgressBar coloredProgressBarDownload;
         private System.Windows.Forms.Label labelCurrentByte;
         private System.Windows.Forms.Label labelTotalByte;

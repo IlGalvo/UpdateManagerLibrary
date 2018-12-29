@@ -6,21 +6,23 @@ namespace UpdaterManagerLibrary
     internal partial class UpdateForm : Form
     {
         #region GLOBAL_VARIABLE
-        private string versionHistory;
+        private Versioning versioning;
         #endregion
 
         #region FORM_EVENTS
-        public UpdateForm(string versionHistory)
+        public UpdateForm(Versioning versioning)
         {
             InitializeComponent();
 
-            this.versionHistory = versionHistory;
+            this.versioning = versioning;
         }
 
         private void UpdateForm_Load(object sender, EventArgs e)
         {
-            richTextBoxChangelog.Text = versionHistory;
+            labelCurrentVersion.Text += versioning.CurrentVersion;
+            labelLastVersion.Text += versioning.LatestVersion;
 
+            richTextBoxChangelog.Text = versioning.VersionHistory;
             richTextBoxChangelog.Rtf = richTextBoxChangelog.Rtf.Replace(@"\\", @"\").Replace(@"\tab", "    ");
         }
         #endregion

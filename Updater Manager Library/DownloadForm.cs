@@ -56,7 +56,7 @@ namespace UpdaterManagerLibrary
             }
             catch (Exception exception)
             {
-                ManageResultOperations("Errore durante la preparazione del download.", exception.Message);
+                ManageResultErrors("Errore durante la preparazione del download.", exception.Message);
             }
         }
 
@@ -66,7 +66,7 @@ namespace UpdaterManagerLibrary
             {
                 webClientTimeout.CancelAsync();
 
-                ManageResultOperations("Download interrotto.");
+                ManageResultErrors("Download interrotto.");
             }
 
             webClientTimeout.Dispose();
@@ -89,7 +89,7 @@ namespace UpdaterManagerLibrary
             {
                 if (!e.Cancelled)
                 {
-                    ManageResultOperations("Errore durante il download.", e.Error.Message);
+                    ManageResultErrors("Errore durante il download.", e.Error.Message);
                 }
             }
             else
@@ -133,7 +133,7 @@ namespace UpdaterManagerLibrary
                 }
                 catch (Exception exception)
                 {
-                    ManageResultOperations("Errore durante l'avvio dell'installazione.", exception.Message);
+                    ManageResultErrors("Errore durante l'avvio dell'installazione.", exception.Message);
 
                     DeleteFile(updaterFilePath);
                 }
@@ -153,7 +153,7 @@ namespace UpdaterManagerLibrary
         #endregion
 
         #region RESULT_MANAGER
-        private void ManageResultOperations(string informationText, string exceptionMessage = null)
+        private void ManageResultErrors(string informationText, string exceptionMessage = null)
         {
             DeleteFile(downloadFilePath);
 

@@ -33,7 +33,9 @@ namespace UpdaterManagerLibrary
                             }
                         }
 
-                        using (UpdateForm updateForm = new UpdateForm(versioning.VersionHistory))
+                        versioning.CurrentVersion = currentVersion.ToString();
+
+                        using (UpdateForm updateForm = new UpdateForm(versioning))
                         {
                             if (updateForm.ShowDialog() == DialogResult.OK)
                             {
