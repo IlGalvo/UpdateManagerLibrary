@@ -1,16 +1,14 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 
 namespace UpdaterManagerLibrary
 {
     public static class UpdaterManager
     {
         #region CHECK_UPDATES
-        public static bool CheckForUpdates(string updateCheckUrl, Assembly mainAssembly = null, bool verboseNotifier = false)
+        public static bool CheckForUpdates(string updateCheckUrl, Assembly applicationAssembly = null, bool verboseNotifier = false)
         {
             bool operationSuccess = false;
 
@@ -19,18 +17,17 @@ namespace UpdaterManagerLibrary
                 int connectionTimeout = ((!verboseNotifier) ? Utilities.DefaultTimeout : Utilities.LongTimeout);
 
                 using (WebClientTimeout webClientTimeout = new WebClientTimeout(connectionTimeout))
-                using (StreamReader streamReader = new StreamReader(webClientTimeout.OpenRead(new Uri(updateCheckUrl))))
                 {
-                    Versioning versioning = ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
+                    Versioning versioning = Versioning.DeserializeFromStream(webClientTimeout.OpenRead(new Uri(updateCheckUrl)));
 
-                    if (mainAssembly == null)
+                    if (applicationAssembly == null)
                     {
-                        mainAssembly = Assembly.GetEntryAssembly();
+                        applicationAssembly = Assembly.GetEntryAssembly();
                     }
 
-                    versioning.MainAssemblyName = mainAssembly.GetName();
+                    versioning.ApplicationAssemblyName = applicationAssembly.GetName();
 
-                    if (versioning.MainAssemblyName.Version < Version.Parse(versioning.LatestVersion))
+                    if (versioning.ApplicationAssemblyName.Version < Version.Parse(versioning.LatestVersion))
                     {
                         ManageVisualStyles();
 
@@ -38,7 +35,7 @@ namespace UpdaterManagerLibrary
                         {
                             if (updateForm.ShowDialog() == DialogResult.OK)
                             {
-                                using (DownloadForm downloadForm = new DownloadForm(versioning, mainAssembly.Location))
+                                using (DownloadForm downloadForm = new DownloadForm(versioning, applicationAssembly.Location))
                                 {
                                     if (downloadForm.ShowDialog() == DialogResult.OK)
                                     {

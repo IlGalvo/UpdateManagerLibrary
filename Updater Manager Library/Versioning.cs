@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -10,7 +9,7 @@ namespace UpdaterManagerLibrary
     public sealed class Versioning
     {
         #region GLOBAL_VARIABLES
-        internal AssemblyName MainAssemblyName { get; set; }
+        internal AssemblyName ApplicationAssemblyName { get; set; }
 
         public string LatestVersion { get; set; }
         public string DownloadUrl { get; set; }
@@ -21,7 +20,7 @@ namespace UpdaterManagerLibrary
         #region CONSTRUCTOR
         public Versioning()
         {
-            MainAssemblyName = new AssemblyName();
+            ApplicationAssemblyName = new AssemblyName();
 
             LatestVersion = string.Empty;
             DownloadUrl = string.Empty;
@@ -36,6 +35,16 @@ namespace UpdaterManagerLibrary
             using (StreamWriter streamWriter = new StreamWriter(filePath))
             {
                 new XmlSerializer(typeof(Versioning)).Serialize(streamWriter, this);
+            }
+        }
+        #endregion
+
+        #region XML_DESERIALIZER
+        public static Versioning DeserializeFromStream(Stream stream)
+        {
+            using (StreamReader streamReader = new StreamReader(stream))
+            {
+                return ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
             }
         }
         #endregion
