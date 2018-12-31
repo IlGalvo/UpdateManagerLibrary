@@ -1,2 +1,2 @@
-# Updater-Manager-Library
+# Updater Manager Library
 ToDo
