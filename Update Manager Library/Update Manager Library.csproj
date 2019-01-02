@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Update Manager Library.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Icon.ico" />
