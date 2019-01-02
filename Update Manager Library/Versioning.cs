@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
 
-namespace UpdaterManagerLibrary
+namespace UpdateManagerLibrary
 {
     public sealed class Versioning
     {

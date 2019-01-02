@@ -6,12 +6,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{AF06A79A-F84E-43B9-A591-F8ADE5526F55}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>UpdaterManager</RootNamespace>
-    <AssemblyName>Updater Manager</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <RootNamespace>UpdateManagerWorker</RootNamespace>
+    <AssemblyName>Update Manager Worker</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -69,6 +70,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Updater Manager Library\Resources\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>COPY "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Update Manager Library\Resources\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

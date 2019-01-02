@@ -3,9 +3,9 @@ using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace UpdaterManagerLibrary
+namespace UpdateManagerLibrary
 {
-    public static class UpdaterManager
+    public static class UpdateManager
     {
         #region CHECK_UPDATES
         public static bool CheckForUpdates(string updateCheckUrl, Assembly applicationAssembly = null, bool verboseNotifier = false)

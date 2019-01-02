@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows.Forms;
-using UpdaterManagerLibrary;
+using UpdateManagerLibrary;
 
 namespace Sample
 {
@@ -16,7 +16,7 @@ namespace Sample
         {
             string downloadUrl = "https://onedrive.live.com/download?resid=7D7FF9DFDA23C644!1341&authkey=!AAPfdJrVo5UeVkE";
 
-            if (UpdaterManager.CheckForUpdates(downloadUrl, Assembly.GetExecutingAssembly(), true))
+            if (UpdateManager.CheckForUpdates(downloadUrl, Assembly.GetExecutingAssembly(), true))
             {
                 Close();
             }

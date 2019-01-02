@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace UpdaterManagerLibrary
+namespace UpdateManagerLibrary
 {
     internal sealed class WebClientTimeout : WebClient
     {

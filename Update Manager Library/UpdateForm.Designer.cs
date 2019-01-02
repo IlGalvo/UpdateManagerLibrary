@@ -1,4 +1,4 @@
-﻿namespace UpdaterManagerLibrary
+﻿namespace UpdateManagerLibrary
 {
     partial class UpdateForm
     {
@@ -137,7 +137,7 @@
             this.Controls.Add(this.labelTitleStatic);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Icon = global::UpdaterManagerLibrary.Properties.Resources.Icon;
+            this.Icon = global::UpdateManagerLibrary.Properties.Resources.Icon;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MinimumSize = new System.Drawing.Size(430, 460);
             this.Name = "UpdateForm";

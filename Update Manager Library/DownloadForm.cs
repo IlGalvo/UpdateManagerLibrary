@@ -5,9 +5,9 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using UpdaterManagerLibrary.Properties;
+using UpdateManagerLibrary.Properties;
 
-namespace UpdaterManagerLibrary
+namespace UpdateManagerLibrary
 {
     internal partial class DownloadForm : Form
     {
@@ -107,7 +107,7 @@ namespace UpdaterManagerLibrary
                         SetLabelText("Download completato e verificato con successo.");
 
                         updaterFilePath = Path.Combine(Path.GetTempPath(), Utilities.UpdaterName);
-                        File.WriteAllBytes(updaterFilePath, Resources.Updater_Manager);
+                        File.WriteAllBytes(updaterFilePath, Resources.Update_Manager_Worker);
 
                         ProcessStartInfo processStartInfo = new ProcessStartInfo
                         {

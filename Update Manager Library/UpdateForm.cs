@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace UpdaterManagerLibrary
+namespace UpdateManagerLibrary
 {
     internal partial class UpdateForm : Form
     {

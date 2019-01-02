@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace UpdaterManager
+namespace UpdateManagerWorker
 {
     internal static class Utilities
     {

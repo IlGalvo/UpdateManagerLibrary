@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace UpdaterManager
+namespace UpdateManagerWorker
 {
     public static class MainProgram
     {

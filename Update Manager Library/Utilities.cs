@@ -1,4 +1,4 @@
-﻿namespace UpdaterManagerLibrary
+﻿namespace UpdateManagerLibrary
 {
     internal static class Utilities
     {
@@ -19,7 +19,7 @@
         #endregion
 
         #region UPDATER
-        public static string UpdaterName { get { return ("Updater Manager.exe"); } }
+        public static string UpdaterName { get { return ("Update Manager Worker.exe"); } }
 
         public static string UpdaterArguments { get { return ("/update \"{0}\" \"{1}\""); } }
         #endregion
