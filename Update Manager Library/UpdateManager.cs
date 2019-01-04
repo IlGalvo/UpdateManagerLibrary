@@ -18,7 +18,7 @@ namespace UpdateManagerLibrary
 
                 using (WebClientTimeout webClientTimeout = new WebClientTimeout(connectionTimeout))
                 {
-                    Versioning versioning = Versioning.DeserializeFromStream(webClientTimeout.OpenRead(new Uri(updateCheckUrl)));
+                    Versioning versioning = Versioning.CreateOrLoad(webClientTimeout.OpenRead(new Uri(updateCheckUrl)));
 
                     if (applicationAssembly == null)
                     {

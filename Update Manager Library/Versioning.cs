@@ -1,12 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using CustomControlCollection.Settings;
+using System;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Xml.Serialization;
 
 namespace UpdateManagerLibrary
 {
-    public sealed class Versioning
+    public sealed class Versioning : SettingsManager<Versioning>
     {
         #region GLOBAL_VARIABLES
         internal AssemblyName ApplicationAssemblyName { get; set; }
@@ -26,26 +25,6 @@ namespace UpdateManagerLibrary
             DownloadUrl = string.Empty;
             Sha256 = string.Empty;
             VersionHistory = string.Empty;
-        }
-        #endregion
-
-        #region XML_SERIALIZER
-        public void SerializeToXml(string filePath)
-        {
-            using (StreamWriter streamWriter = new StreamWriter(filePath))
-            {
-                new XmlSerializer(typeof(Versioning)).Serialize(streamWriter, this);
-            }
-        }
-        #endregion
-
-        #region XML_DESERIALIZER
-        public static Versioning DeserializeFromStream(Stream stream)
-        {
-            using (StreamReader streamReader = new StreamReader(stream))
-            {
-                return ((Versioning)new XmlSerializer(typeof(Versioning)).Deserialize(streamReader));
-            }
         }
         #endregion
 
