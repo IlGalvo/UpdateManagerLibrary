@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/Terminator24/UpdateManagerLibrary</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First release.</releaseNotes>
+    <releaseNotes>Full changelog: https://github.com/Terminator24/UpdateManagerLibrary/blob/master/CHANGELOG.md here.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>WinForm Fast Update Manager Simple Library</tags>
   </metadata>
