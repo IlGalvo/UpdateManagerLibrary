@@ -35,12 +35,15 @@ namespace UpdateManagerWorker
                                 string completeFileName = Path.Combine(Environment.CurrentDirectory, zipArchiveEntry.FullName);
                                 string directoryName = Path.GetDirectoryName(completeFileName);
 
-                                if (!Directory.Exists(directoryName))
+                                if (!string.IsNullOrEmpty(zipArchiveEntry.Name))
                                 {
-                                    Directory.CreateDirectory(directoryName);
-                                }
+                                    if (!Directory.Exists(directoryName))
+                                    {
+                                        Directory.CreateDirectory(directoryName);
+                                    }
 
-                                zipArchiveEntry.ExtractToFile(completeFileName, true);
+                                    zipArchiveEntry.ExtractToFile(completeFileName, true);
+                                }
                             }
                         }
 
