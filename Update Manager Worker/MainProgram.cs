@@ -32,11 +32,11 @@ namespace UpdateManagerWorker
                         {
                             foreach (ZipArchiveEntry zipArchiveEntry in zipArchive.Entries)
                             {
-                                string completeFileName = Path.Combine(Environment.CurrentDirectory, zipArchiveEntry.FullName);
-                                string directoryName = Path.GetDirectoryName(completeFileName);
-
                                 if (!string.IsNullOrEmpty(zipArchiveEntry.Name))
                                 {
+                                    string completeFileName = Path.Combine(Environment.CurrentDirectory, zipArchiveEntry.FullName);
+                                    string directoryName = Path.GetDirectoryName(completeFileName);
+
                                     if (!Directory.Exists(directoryName))
                                     {
                                         Directory.CreateDirectory(directoryName);
